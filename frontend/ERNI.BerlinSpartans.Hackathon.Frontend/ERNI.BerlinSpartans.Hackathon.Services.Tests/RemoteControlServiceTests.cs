@@ -1,7 +1,3 @@
-using MQTTnet.Server;
-using MQTTnet;
-using MQTTnet.Internal;
-using ERNI.BerlinSpartans.Hackathon.Services.MqttClient;
 using NSubstitute;
 using Microsoft.Extensions.Options;
 using ERNI.BerlinSpartans.Hackathon.Services.MqttClient.Models;
@@ -9,18 +5,25 @@ using Microsoft.Extensions.Logging;
 using ERNI.BerlinSpartans.Hackathon.Services.Tests.Mocks;
 using ERNI.BerlinSpartans.Hackathon.Services.RemoteControl.Models;
 using ERNI.BerlinSpartans.Hackathon.Services.RemoteControl;
+using ERNI.BerlinSpartans.Hackathon.Services.MqttClient;
 
 namespace ERNI.BerlinSpartans.Hackathon.Services.Tests;
 
 [Trait("Category", "Services")]
 [Trait("Category", "RemoteControl")]
-public class RemoteControlServiceTests
+public class RemoteControlServiceTests: IClassFixture<MockBroker>
 {
-    [Fact]
+    private MockBroker server;
+
+    public RemoteControlServiceTests(MockBroker fixture) 
+    {
+        this.server = fixture;
+    }    
+
+    [Fact]    
     public async Task SendAsync_ForwardCommand_Should_Succeed()
     {
         // Arrange
-        var server = new MockBroker();
         await server.StartAsync();
 
         var options = new MqttClientConnectionOptions
@@ -41,9 +44,7 @@ public class RemoteControlServiceTests
 
         // Act
         await remoteService.SendAsync(command);
-        
-        // Clean-up
-        await server.StopAsync();        
+        Thread.Sleep(1000);
 
         // Assert
         Assert.Equal(1, server.YPosition);
@@ -54,12 +55,11 @@ public class RemoteControlServiceTests
     public async Task SendAsync_BackwardsCommand_Should_Succeed()
     {
         // Arrange
-        var server = new MockBroker();
         await server.StartAsync();
 
         var options = new MqttClientConnectionOptions
         {
-            BrokerAddress = "127.0.0.1",
+            BrokerAddress = "127.0.0.1",            
             SpinTimeout = 100,
         };
 
@@ -75,9 +75,7 @@ public class RemoteControlServiceTests
 
         // Act
         await remoteService.SendAsync(command);
-
-        // Clean-up
-        await server.StopAsync();
+        Thread.Sleep(1000);
 
         // Assert
         Assert.Equal(-1, server.YPosition);
@@ -87,8 +85,7 @@ public class RemoteControlServiceTests
     [Fact]
     public async Task SendAsync_LeftCommand_Should_Succeed()
     {
-        // Arrange
-        var server = new MockBroker();
+        // Arrange        
         await server.StartAsync();
 
         var options = new MqttClientConnectionOptions
@@ -109,9 +106,7 @@ public class RemoteControlServiceTests
 
         // Act
         await remoteService.SendAsync(command);
-
-        // Clean-up
-        await server.StopAsync();
+        Thread.Sleep(1000);
 
         // Assert
         Assert.Equal(0, server.YPosition);
@@ -122,8 +117,7 @@ public class RemoteControlServiceTests
     [Fact]
     public async Task SendAsync_RightCommand_Should_Succeed()
     {
-        // Arrange
-        var server = new MockBroker();
+        // Arrange        
         await server.StartAsync();
 
         var options = new MqttClientConnectionOptions
@@ -137,16 +131,12 @@ public class RemoteControlServiceTests
 
         var logger = Substitute.For<ILogger<MqttClientService>>();
         var client = new MqttClientService(clientOptions, logger);
-
         var remoteService = new RemoteControlService(client);
 
         var command = RemoteCommand.RightCommand(1);
 
         // Act
-        await remoteService.SendAsync(command);
-
-        // Clean-up
-        await server.StopAsync();
+        await remoteService.SendAsync(command);        
 
         // Assert
         Assert.Equal(0, server.YPosition);

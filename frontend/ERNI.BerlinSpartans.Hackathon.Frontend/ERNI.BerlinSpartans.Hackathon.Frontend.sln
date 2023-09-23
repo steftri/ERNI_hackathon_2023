@@ -9,7 +9,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ERNI.BerlinSpartans.Hackath
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ERNI.BerlinSpartans.Hackathon.Services.Tests", "ERNI.BerlinSpartans.Hackathon.Services.Tests\ERNI.BerlinSpartans.Hackathon.Services.Tests.csproj", "{EF1923B9-54AD-476F-8BFE-382B3760DFEF}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERNI.BerlinSpartans.Hackathon.WFTestApp", "ERNI.BerlinSpartans.Hackathon.WFTestApp\ERNI.BerlinSpartans.Hackathon.WFTestApp.csproj", "{711CFB99-F1A3-4360-A315-AFA82BAD5880}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ERNI.BerlinSpartans.Hackathon.TestApp", "ERNI.BerlinSpartans.Hackathon.TestApp\ERNI.BerlinSpartans.Hackathon.TestApp.csproj", "{A7EFA460-65B8-4DF5-AEDF-45FF63C705C5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -29,10 +29,10 @@ Global
 		{EF1923B9-54AD-476F-8BFE-382B3760DFEF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{EF1923B9-54AD-476F-8BFE-382B3760DFEF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{EF1923B9-54AD-476F-8BFE-382B3760DFEF}.Release|Any CPU.Build.0 = Release|Any CPU
-		{711CFB99-F1A3-4360-A315-AFA82BAD5880}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{711CFB99-F1A3-4360-A315-AFA82BAD5880}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{711CFB99-F1A3-4360-A315-AFA82BAD5880}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{711CFB99-F1A3-4360-A315-AFA82BAD5880}.Release|Any CPU.Build.0 = Release|Any CPU
+		{A7EFA460-65B8-4DF5-AEDF-45FF63C705C5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A7EFA460-65B8-4DF5-AEDF-45FF63C705C5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A7EFA460-65B8-4DF5-AEDF-45FF63C705C5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A7EFA460-65B8-4DF5-AEDF-45FF63C705C5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

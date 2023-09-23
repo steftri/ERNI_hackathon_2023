@@ -1,6 +1,7 @@
 ﻿using ERNI.BerlinSpartans.Hackathon.Services.MqttClient;
 using ERNI.BerlinSpartans.Hackathon.Services.RemoteControl.Extensions;
 using ERNI.BerlinSpartans.Hackathon.Services.RemoteControl.Models;
+using MQTTnet.Extensions.ManagedClient;
 
 namespace ERNI.BerlinSpartans.Hackathon.Services.RemoteControl;
 
@@ -8,17 +9,25 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.RemoteControl;
 /// <summary>
 /// Provides methods to send commands to the device.
 /// </summary>
-public class RemoteControlService : IRemoteControlService
+public class RemoteControlService : IRemoteControlService, IDisposable
 {
     private readonly IMqttClientService mqttClientService;
+
+    public event Func<ApplicationMessageProcessedEventArgs, Task>? ApplicationMessageProcessed;
 
     /// <summary>
     /// Creates a new instance of the <see cref="RemoteControlService"/> class.
     /// </summary>
-    /// <param name="mqttClientService">An instance of <see cref="MqttClientService"/> used to communicate with the device.</param>
+    /// <param name="mqttClientService">An instance of <see cref="ManagedMqttClientService"/> used to communicate with the device.</param>
     public RemoteControlService(IMqttClientService mqttClientService)
     {
         this.mqttClientService = mqttClientService;
+        //this.mqttClientService.ApplicationMessageProcessed += MqttClientService_ApplicationMessageProcessed; ;  
+    }
+
+    private Task MqttClientService_ApplicationMessageProcessed(ApplicationMessageProcessedEventArgs arg)
+    {
+        return this.ApplicationMessageProcessed?.Invoke(arg) ?? Task.CompletedTask;
     }
 
     /// <summary>
@@ -30,12 +39,8 @@ public class RemoteControlService : IRemoteControlService
     {
         var response = new RemoteResponse();
         try
-        {
-            var success = await mqttClientService.SendCommandAsync(remoteCommand.ToMqttCommand());
-            if (!success)
-            {
-                response.WithError($"The command {remoteCommand.CommandType} was not processed within the expected timeout. The connection to the device could be lost.");
-            }
+        {            
+            var sendResponse = await mqttClientService!.SendCommandAsync(remoteCommand.ToMqttCommand())!;            
         }
         catch (Exception ex)
         {
@@ -44,5 +49,10 @@ public class RemoteControlService : IRemoteControlService
 
         return response.AsSuccess();
 
+    }
+
+    public void Dispose()
+    {
+        this.mqttClientService.Dispose();
     }
 }

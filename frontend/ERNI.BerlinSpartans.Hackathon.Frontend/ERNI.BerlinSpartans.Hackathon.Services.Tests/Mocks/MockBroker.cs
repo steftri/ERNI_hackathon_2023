@@ -5,21 +5,26 @@ using ERNI.BerlinSpartans.Hackathon.Services.RemoteControl.Models;
 
 namespace ERNI.BerlinSpartans.Hackathon.Services.Tests.Mocks
 {
-    internal class MockBroker : IDisposable
+    public class MockBroker : IDisposable
     {
-        private readonly MqttServer mqttServer;
+        private readonly MqttServer mqttServer;        
 
         public int XPosition { get; set; }
         public int YPosition { get; set; }
+        public event Func<InterceptingPublishEventArgs, Task>? InterceptingPublishAsync;
 
         public MockBroker()
         {
             var mqttFactory = new MqttFactory();
-            var mqttServerOptions = new MqttServerOptionsBuilder().WithDefaultEndpoint().Build();
+            var mqttServerOptions = new MqttServerOptionsBuilder()
+                .WithDefaultEndpoint()                
+                .Build();
 
             mqttServer = mqttFactory.CreateMqttServer(mqttServerOptions);
             mqttServer.InterceptingPublishAsync += args =>
             {
+                this.InterceptingPublishAsync?.Invoke(args);
+
                 var topic = args.ApplicationMessage.Topic;
                 var payload = args.ApplicationMessage.ConvertPayloadToString();
 
@@ -42,14 +47,17 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.Tests.Mocks
                         break;
                     default:
                         break;
-                }
-                return CompletedTask.Instance;
+                }                
+                return Task.CompletedTask;
             };
         }
 
         public Task StartAsync()
         {
-            return this.mqttServer.StartAsync();
+            ResetValues();
+            if (this.mqttServer.IsStarted) return Task.CompletedTask;
+            
+            return this.mqttServer.StartAsync();            
         }
 
         public Task StopAsync()
@@ -59,7 +67,14 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.Tests.Mocks
 
         public void Dispose()
         {
+            this.mqttServer.StopAsync().Wait();
             this.mqttServer.Dispose();
+        }
+
+        private void ResetValues()
+        {
+            this.XPosition = 0;
+            this.YPosition = 0;
         }
     }
 }

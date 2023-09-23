@@ -17,6 +17,11 @@
         public string BrokerAddress { get; set; } = null!;
 
         /// <summary>
+        /// Gets or sets the address of the Broker that the client should connect to.
+        /// </summary>
+        public int? Port { get; set; }
+
+        /// <summary>
         /// Gets or sets the number of milliseconds that are waited before a command is discarded.
         /// </summary>
         public int SpinTimeout { get; set; }

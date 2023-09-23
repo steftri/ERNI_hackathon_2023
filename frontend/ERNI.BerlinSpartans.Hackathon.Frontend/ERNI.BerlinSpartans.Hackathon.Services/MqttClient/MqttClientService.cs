@@ -60,7 +60,7 @@ public class MqttClientService : IMqttClientService, IDisposable
 
         var applicationMessage = new MqttApplicationMessageBuilder()
             .WithTopic(command.Topic)
-            .WithPayload(command.Payload)
+            .WithPayload("[" + command.Payload + "]")
             .Build();
 
         var response = await mqttClient.PublishAsync(applicationMessage, CancellationToken.None);

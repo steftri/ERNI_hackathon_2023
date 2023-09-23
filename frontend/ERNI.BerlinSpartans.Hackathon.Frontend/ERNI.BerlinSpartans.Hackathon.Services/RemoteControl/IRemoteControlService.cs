@@ -7,6 +7,6 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.RemoteControl
     {
 
         event Func<ApplicationMessageProcessedEventArgs, Task>? ApplicationMessageProcessed;
-        Task<RemoteResponse> SendAsync(RemoteCommand remoteCommand);
+        Task<RemoteResponse> SendAsync(string remoteCommand);
     }
 }

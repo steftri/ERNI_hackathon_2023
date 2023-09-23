@@ -22,7 +22,4 @@ remoteControlService.ApplicationMessageProcessed += e =>
 };
 
 //10.230.90.68: 1883
-var sendResult = await remoteControlService.SendAsync(new RemoteCommand
-{
-    CommandType = RemoteCommandType.Set
-});
+var sendResult = await remoteControlService.SendAsync(RemoteCommandFactory.Say("Liebe Grüße!"));

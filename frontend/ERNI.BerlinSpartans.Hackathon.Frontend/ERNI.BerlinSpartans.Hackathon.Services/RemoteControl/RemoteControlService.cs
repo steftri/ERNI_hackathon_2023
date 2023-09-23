@@ -1,4 +1,5 @@
 ﻿using ERNI.BerlinSpartans.Hackathon.Services.MqttClient;
+using ERNI.BerlinSpartans.Hackathon.Services.MqttClient.Models;
 using ERNI.BerlinSpartans.Hackathon.Services.RemoteControl.Extensions;
 using ERNI.BerlinSpartans.Hackathon.Services.RemoteControl.Models;
 using MQTTnet.Extensions.ManagedClient;
@@ -35,16 +36,21 @@ public class RemoteControlService : IRemoteControlService, IDisposable
     /// </summary>
     /// <param name="remoteCommand"></param>
     /// <returns></returns>
-    public async Task<RemoteResponse> SendAsync(RemoteCommand remoteCommand)
+    public async Task<RemoteResponse> SendAsync(string remoteCommand)
     {
         var response = new RemoteResponse();
         try
-        {            
-            var sendResponse = await mqttClientService!.SendCommandAsync(remoteCommand.ToMqttCommand())!;            
+        {
+            var command = new MqttCommand
+            {
+                Topic = "command",
+                Payload = remoteCommand
+            };
+            var sendResponse = await mqttClientService!.SendCommandAsync(command)!;
         }
         catch (Exception ex)
         {
-            return response.WithError($"The command {remoteCommand.CommandType} returned the unexpected exception: {ex.Message}.");
+            return response.WithError($"The command {remoteCommand} returned the unexpected exception: {ex.Message}.");
         }
 
         return response.AsSuccess();

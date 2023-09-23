@@ -12,6 +12,8 @@ Our members are:
  * Martin Teichler [MTeichlerRche](https://github.com/MTeichlerRche)
  * Stefan Trippler [steftri](https://github.com/steftri)
 
+The base for the project is the PiCar-X by SunFounder with a Rapberry Pi 4. 
+
 
 ## Intended Use
 
@@ -46,8 +48,20 @@ The system shall be able to controll the movement of the robot remotely
 
 ### Firmware SW Requirements
 
+#### SW01 Environment
+The software shall run on a Raspberry Pi 4 with a Robot HAT board.
 
+#### SW02 Motion
+The software shall be able to control the forward and backward motion with adjustable speed.
 
+#### SW03 Steering
+The software shall be able to control the direction of the robot's movement.
+
+#### SW04 Video
+The software shall be able to provide a real-time video from the robot's camera.
+
+#### SW05 RemoteControl
+The software shall be able to receive and process remote control commands.
 
 
 
@@ -62,7 +76,7 @@ The system shall be able to controll the movement of the robot remotely
 ### System Traceability
 
 | System Requirements        | Traces to |
-|----------------------------|-----------|´
+|----------------------------|-----------|
 | SysR01 - Video             |           |
 | SysR02 - Remote Control    |           |
 

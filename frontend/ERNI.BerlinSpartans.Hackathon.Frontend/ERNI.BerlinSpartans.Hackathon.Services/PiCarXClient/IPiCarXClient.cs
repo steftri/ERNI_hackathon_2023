@@ -1,5 +1,8 @@
 ﻿namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
 {
+    /// <summary>
+    /// This is used to encapsulate the PiCar X implementation.
+    /// </summary>
     public interface IPiCarXClient
     {
         Task Accelerate();

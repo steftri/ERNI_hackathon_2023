@@ -1,5 +1,6 @@
 ﻿class HtmlElementListener {
     classSelector = "";
+    //Tracking the movement of the robot.
     movement = {
         forward: false,
         backward: false,
@@ -17,6 +18,8 @@
         this.addKeyUpEventListeners();
     }
 
+    //Select buttons used for controlling the robot and add listeners to them so we can track movement.
+    //This method dispatches triggers which can be listened for on the other side.
     addKeyDownEventListeners() {
         var buttonShift = $('.' + this.classSelector + '-Shift');
         var buttonCtrl = $('.' + this.classSelector + '-Ctrl');
@@ -85,6 +88,8 @@
         });
     }
 
+    //Select buttons used for controlling the robot and add listeners to them so we can track movement.
+    //This method dispatches triggers which can be listened for on the other side.
     addKeyUpEventListeners() {
         var buttonShift = $('.' + this.classSelector + '-Shift');
         var buttonCtrl = $('.' + this.classSelector + '-Ctrl');

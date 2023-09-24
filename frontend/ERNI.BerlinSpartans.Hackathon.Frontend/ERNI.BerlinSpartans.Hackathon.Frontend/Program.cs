@@ -8,7 +8,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddRazorPages();
 builder.Services.AddSignalR();
 
-builder.Services.Configure<MqttClientConnectionOptions>(builder.Configuration);
+builder.Services.Configure<MqttClientConnectionOptions>(builder.Configuration.GetSection("MQTT"));
 builder.Services.AddSingleton<IMqttClientService, MqttClientService>();
 builder.Services.AddSingleton<IPiCarXClient, PiCarXClient>();
 

@@ -1,6 +1,10 @@
 ﻿.camera-feed {
     height: 600px;
-    width: 800px;
+    width: 100% ;
     background-color: #000000;
     color: #FFFFFF;
+}
+
+.col-md{
+    text-align:center;
 }

@@ -1,10 +1,5 @@
 ﻿using ERNI.BerlinSpartans.Hackathon.Services.MqttClient;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using ERNI.BerlinSpartans.Hackathon.Services.MqttClient.Models;
 
 namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
 {
@@ -15,15 +10,21 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
         public PiCarXClient(IMqttClientService mqttClientService)
         {
             _mqttClientService = mqttClientService;
+            if (!_mqttClientService.IsConnected())
+            {
+                _mqttClientService.Connect().Wait();
+            }
         }
 
         public async Task Accelerate()
         {
+            _ = await _mqttClientService.SendCommandAsync(MqttCommandFactory.SetSpeed(50));
             await Task.CompletedTask;
         }
 
         public async Task Decelerate()
         {
+            _ = await _mqttClientService.SendCommandAsync(MqttCommandFactory.SetSpeed(-50));
             await Task.CompletedTask;
         }
 

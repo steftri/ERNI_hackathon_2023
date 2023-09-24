@@ -18,5 +18,14 @@ html {
 }
 
 body {
-  margin-bottom: 60px;
+    margin-bottom: 60px;
+}
+
+html {
+    min-width: 860px!important;
+}
+
+.navbar-blue{
+    background-color: #073779;
+    color: white;
 }

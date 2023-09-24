@@ -1,4 +1,5 @@
 ﻿class KeyBoardListener {
+    //Tracking the movement of the robot.
     movement = {
         forward: false,
         backward: false,
@@ -15,7 +16,8 @@
         this.addKeyUpEventListener();
     }
 
-
+    //Add listener to keyboard events so we can track whether user presses any buttons.
+    //This method dispatches triggers which can be listened for on the other side.
     addKeyDownEventListener() {
         var self = this;
         $(document).on('keydown', function (e) {
@@ -72,6 +74,8 @@
         });
     }
 
+    //Add listener to keyboard events so we can track whether user presses any buttons.
+    //This method dispatches triggers which can be listened for on the other side.
     addKeyUpEventListener() {
         var self = this;
         $(document).on('keyup', function (e) {

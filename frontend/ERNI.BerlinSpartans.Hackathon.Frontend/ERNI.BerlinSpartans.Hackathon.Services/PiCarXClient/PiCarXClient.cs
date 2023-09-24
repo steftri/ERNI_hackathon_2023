@@ -12,8 +12,8 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
         private readonly IMqttClientService _mqttClientService;
 
         private const int SpeedIncrement = 10;
-        private const int DirectionAngleIncrement = 45;
-        private const int HeadAngleIncrement = 45;
+        private const int DirectionAngleIncrement = 15;
+        private const int HeadAngleIncrement = 15;
 
         public int CurrentSpeed { get; set; }
         public int CurrentDirectionAngle { get; set; }
@@ -57,7 +57,8 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
         public async Task<MovementChangedResponse> GoBackward()
         {
             var commandResponses = new List<CommandResponse>();
-            commandResponses.Add(await SendCommandAsync(MqttCommandFactory.SetSpeed(0), () => CurrentSpeed = 0));
+            var speed = CurrentSpeed > 0 ? 0 : Math.Max(CurrentSpeed - SpeedIncrement, -45);
+            commandResponses.Add(await SendCommandAsync(MqttCommandFactory.SetSpeed(speed), () => CurrentSpeed = speed));
 
             return new MovementChangedResponse()
                 .WithCurrentValues(CurrentSpeed, CurrentDirectionAngle, CurrentHeadAngle)
@@ -71,7 +72,9 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
         {
             var commandResponses = new List<CommandResponse>();
 
-            commandResponses.Add(await SendCommandAsync(MqttCommandFactory.SetSpeed(SpeedIncrement), () => CurrentSpeed = SpeedIncrement));
+            var speed = CurrentSpeed < 0 ? 0 : Math.Min(CurrentSpeed + SpeedIncrement, 45);
+
+            commandResponses.Add(await SendCommandAsync(MqttCommandFactory.SetSpeed(speed), () => CurrentSpeed = speed));
             commandResponses.Add(await SendCommandAsync(MqttCommandFactory.SetDirection(0), () => CurrentDirectionAngle = 0));
 
             return new MovementChangedResponse()
@@ -85,9 +88,9 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
         public async Task<MovementChangedResponse> GoLeft()
         {
             var commandResponses = new List<CommandResponse>();
-            
+
             commandResponses.Add(await SendCommandAsync(MqttCommandFactory.SetDirection(-DirectionAngleIncrement), () => CurrentDirectionAngle = -DirectionAngleIncrement));
-            
+
             return new MovementChangedResponse()
                 .WithCurrentValues(CurrentSpeed, CurrentDirectionAngle, CurrentHeadAngle)
                 .WithCommandResponses(commandResponses);
@@ -98,9 +101,9 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
         /// </summary>
         public async Task<MovementChangedResponse> GoRight()
         {
-            var commandResponses = new List<CommandResponse>();            
-            
-            commandResponses.Add(await SendCommandAsync(MqttCommandFactory.SetDirection(DirectionAngleIncrement), ()=> CurrentDirectionAngle = DirectionAngleIncrement));
+            var commandResponses = new List<CommandResponse>();
+
+            commandResponses.Add(await SendCommandAsync(MqttCommandFactory.SetDirection(DirectionAngleIncrement), () => CurrentDirectionAngle = DirectionAngleIncrement));
 
             return new MovementChangedResponse()
                 .WithCurrentValues(CurrentSpeed, CurrentDirectionAngle, CurrentHeadAngle)
@@ -113,9 +116,9 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
         public async Task<MovementChangedResponse> TurnHeadLeft()
         {
             var commandResponses = new List<CommandResponse>();
-            
-            commandResponses.Add(await SendCommandAsync(MqttCommandFactory.SetHeadRotate(-HeadAngleIncrement), ()=>CurrentHeadAngle = -HeadAngleIncrement));
-            
+
+            commandResponses.Add(await SendCommandAsync(MqttCommandFactory.SetHeadRotate(-HeadAngleIncrement), () => CurrentHeadAngle = -HeadAngleIncrement));
+
             return new MovementChangedResponse()
                 .WithCurrentValues(CurrentSpeed, CurrentDirectionAngle, CurrentHeadAngle)
                 .WithCommandResponses(commandResponses);
@@ -145,6 +148,9 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
         {
             try
             {
+                // Ensures the connection.
+                await Connect();
+
                 if (!_mqttClientService.IsConnected())
                 {
                     return new CommandResponse()

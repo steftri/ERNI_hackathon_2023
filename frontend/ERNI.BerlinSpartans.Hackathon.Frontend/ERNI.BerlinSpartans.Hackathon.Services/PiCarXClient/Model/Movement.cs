@@ -12,8 +12,6 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient.Model
         public bool Backward { get; set; }
         public bool Left { get; set; }
         public bool Right { get; set; }
-        public bool Accelerate { get; set; }
-        public bool Decelerate { get; set; }
         public bool TurnHeadLeft { get; set; }
         public bool TurnHeadRight { get; set; }
 
@@ -23,8 +21,6 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient.Model
                       Backward: {Backward}, 
                       Left: {Left}, 
                       Right: {Right}, 
-                      Accelerate: {Accelerate}, 
-                      Decelerate: {Decelerate}, 
                       TurnHeadLeft: {TurnHeadLeft}, 
                       TurnHeadRight: {TurnHeadRight}";
         }

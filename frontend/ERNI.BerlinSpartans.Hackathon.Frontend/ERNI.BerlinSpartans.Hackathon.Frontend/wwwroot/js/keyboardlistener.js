@@ -5,8 +5,6 @@
         backward: false,
         left: false,
         right: false,
-        accelerate: false,
-        decelerate: false,
         turnHeadLeft: false,
         turnHeadRight: false
     };
@@ -22,18 +20,6 @@
         var self = this;
         $(document).on('keydown', function (e) {
             switch (e.key.toUpperCase()) {
-                case 'SHIFT':
-                    if (self.movement.accelerate !== true) {
-                        self.movement.accelerate = true;
-                        $(self).trigger('movementChanged', self.movement);
-                    }
-                    break;
-                case 'CONTROL':
-                    if (self.movement.decelerate !== true) {
-                        self.movement.decelerate = true;
-                        $(self).trigger('movementChanged', self.movement);
-                    }
-                    break;
                 case 'Q':
                     if (self.movement.turnHeadLeft !== true) {
                         self.movement.turnHeadLeft = true;
@@ -80,18 +66,6 @@
         var self = this;
         $(document).on('keyup', function (e) {
             switch (e.key.toUpperCase()) {
-                case 'SHIFT':
-                    if (self.movement.accelerate !== false) {
-                        self.movement.accelerate = false;
-                        $(self).trigger('movementChanged', self.movement);
-                    }
-                    break;
-                case 'CONTROL':
-                    if (self.movement.decelerate !== false) {
-                        self.movement.decelerate = false;
-                        $(self).trigger('movementChanged', self.movement);
-                    }
-                    break;
                 case 'Q':
                     if (self.movement.turnHeadLeft !== false) {
                         self.movement.turnHeadLeft = false;

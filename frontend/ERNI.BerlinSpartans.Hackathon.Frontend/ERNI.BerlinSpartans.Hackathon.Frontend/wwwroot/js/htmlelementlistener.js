@@ -6,8 +6,6 @@
         backward: false,
         left: false,
         right: false,
-        accelerate: false,
-        decelerate: false,
         turnHeadLeft: false,
         turnHeadRight: false
     };
@@ -21,8 +19,6 @@
     //Select buttons used for controlling the robot and add listeners to them so we can track movement.
     //This method dispatches triggers which can be listened for on the other side.
     addKeyDownEventListeners() {
-        var buttonShift = $('.' + this.classSelector + '-Shift');
-        var buttonCtrl = $('.' + this.classSelector + '-Ctrl');
         var buttonQ = $('.' + this.classSelector + '-Q');
         var buttonE = $('.' + this.classSelector + '-E');
         var buttonW = $('.' + this.classSelector + '-W');
@@ -30,20 +26,6 @@
         var buttonS = $('.' + this.classSelector + '-S');
         var buttonD = $('.' + this.classSelector + '-D');
         var self = this;
-
-        $(buttonShift).mousedown(function (e) {
-            if (self.movement.accelerate !== true) {
-                self.movement.accelerate = true;
-                $(self).trigger('movementChanged', self.movement);
-            }
-        });
-
-        $(buttonCtrl).mousedown(function (e) {
-            if (self.movement.decelerate !== true) {
-                self.movement.decelerate = true;
-                $(self).trigger('movementChanged', self.movement);
-            }
-        });
 
         $(buttonQ).mousedown(function (e) {
             if (self.movement.turnHeadLeft !== true) {
@@ -91,8 +73,6 @@
     //Select buttons used for controlling the robot and add listeners to them so we can track movement.
     //This method dispatches triggers which can be listened for on the other side.
     addKeyUpEventListeners() {
-        var buttonShift = $('.' + this.classSelector + '-Shift');
-        var buttonCtrl = $('.' + this.classSelector + '-Ctrl');
         var buttonQ = $('.' + this.classSelector + '-Q');
         var buttonE = $('.' + this.classSelector + '-E');
         var buttonW = $('.' + this.classSelector + '-W');
@@ -100,20 +80,6 @@
         var buttonS = $('.' + this.classSelector + '-S');
         var buttonD = $('.' + this.classSelector + '-D');
         var self = this;
-
-        $(buttonShift).mouseup(function (e) {
-            if (self.movement.accelerate !== false) {
-                self.movement.accelerate = false;
-                $(self).trigger('movementChanged', self.movement);
-            }
-        });
-
-        $(buttonCtrl).mouseup(function (e) {
-            if (self.movement.decelerate !== false) {
-                self.movement.decelerate = false;
-                $(self).trigger('movementChanged', self.movement);
-            }
-        });
 
         $(buttonQ).mouseup(function (e) {
             if (self.movement.turnHeadLeft !== false) {

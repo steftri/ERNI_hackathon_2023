@@ -1,8 +1,12 @@
 ﻿using ERNI.BerlinSpartans.Hackathon.Services.MqttClient;
 using ERNI.BerlinSpartans.Hackathon.Services.MqttClient.Models;
+using ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient.Model;
 
 namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
 {
+    /// <summary>
+    /// <inheritdoc/>
+    /// </summary>
     public class PiCarXClient : IPiCarXClient
     {
         private readonly IMqttClientService _mqttClientService;
@@ -10,53 +14,96 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
         public PiCarXClient(IMqttClientService mqttClientService)
         {
             _mqttClientService = mqttClientService;
+        }
+
+        /// <summary>
+        /// Connects the MQTT service to the robot.
+        /// </summary>
+        public void Connect()
+        {
             if (!_mqttClientService.IsConnected())
             {
                 _mqttClientService.Connect().Wait();
             }
         }
 
-        public async Task Accelerate()
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public async Task<MovementChangedResponse> GoBackward()
         {
-            _ = await _mqttClientService.SendCommandAsync(MqttCommandFactory.SetSpeed(50));
-            await Task.CompletedTask;
+            return await SendCommandAsync(MqttCommandFactory.SetSpeed(0));
         }
 
-        public async Task Decelerate()
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public async Task<MovementChangedResponse> GoForward()
         {
-            _ = await _mqttClientService.SendCommandAsync(MqttCommandFactory.SetSpeed(-50));
-            await Task.CompletedTask;
+            return await SendCommandAsync(MqttCommandFactory.SetDirection(0));
         }
 
-        public async Task GoBackward()
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public async Task<MovementChangedResponse> GoLeft()
         {
-            await Task.CompletedTask;
+            return await SendCommandAsync(MqttCommandFactory.SetDirection(-45));
         }
 
-        public async Task GoForward()
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public async Task<MovementChangedResponse> GoRight()
         {
-            await Task.CompletedTask;
+            return await SendCommandAsync(MqttCommandFactory.SetDirection(45));
         }
 
-        public async Task GoLeft()
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public async Task<MovementChangedResponse> TurnHeadLeft()
         {
-            await Task.CompletedTask;
+            return await SendCommandAsync(MqttCommandFactory.SetHeadTilt(-45));
         }
 
-        public async Task GoRight()
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public async Task<MovementChangedResponse> TurnHeadRight()
         {
-            await Task.CompletedTask;
+            return await SendCommandAsync(MqttCommandFactory.SetHeadTilt(45));
         }
 
-        public async Task TurnHeadLeft()
+        /// <summary>
+        /// Helper method which handles sending commands to the robot.
+        /// </summary>
+        /// <param name="mqttCommand">The command to send.</param>
+        /// <returns>A response indicating the result of the command.</returns>
+        private async Task<MovementChangedResponse> SendCommandAsync(MqttCommand mqttCommand)
         {
-            await Task.CompletedTask;
-        }
+            try
+            {
+                if (!_mqttClientService.IsConnected())
+                {
+                    return new MovementChangedResponse { ResponseCode = MovementChangedResponseCodes.NotConnected, Message = "The application could not connect to the robot." };
+                }
 
-        public async Task TurnHeadRight()
-        {
-            await Task.CompletedTask;
-        }
+                var result = await _mqttClientService.SendCommandAsync(mqttCommand);
 
+                if (result.IsSuccess)
+                {
+                    return new MovementChangedResponse { ResponseCode = MovementChangedResponseCodes.Success, Message = "The command was successfully sent to the robot." };
+                }
+                else
+                {
+                    return new MovementChangedResponse { ResponseCode = MovementChangedResponseCodes.GenericError, Message = result.ReasonString };
+                }
+            }
+            catch (Exception ex)
+            {
+                return new MovementChangedResponse { ResponseCode = MovementChangedResponseCodes.GenericError, Message = ex.Message };
+            }
+        }
     }
 }

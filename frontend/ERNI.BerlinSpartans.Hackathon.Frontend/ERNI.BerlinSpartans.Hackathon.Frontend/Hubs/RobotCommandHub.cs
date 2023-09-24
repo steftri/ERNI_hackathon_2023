@@ -1,4 +1,5 @@
-﻿using ERNI.BerlinSpartans.Hackathon.Services.MqttClient;
+﻿using ERNI.BerlinSpartans.Hackathon.Frontend.Hubs.Model;
+using ERNI.BerlinSpartans.Hackathon.Services.MqttClient;
 using ERNI.BerlinSpartans.Hackathon.Services.MqttClient.Models;
 using ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient;
 using ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient.Model;
@@ -27,47 +28,39 @@ namespace ERNI.BerlinSpartans.Hackathon.Frontend.Hubs
         /// This is called by the SignalR JS library and tells the robot to make a move.
         /// </summary>
         /// <param name="movement">Contains all the commands the robot should take.</param>
-        public async Task MovementChanged(Movement movement)
+        public async Task<MovementChangedResponse> MovementChanged(Movement movement)
         {
-            if (movement.Accelerate)
-            {
-                await _picarClient.Accelerate();
-            }
-
-            if (movement.Decelerate)
-            {
-                await _picarClient.Decelerate();
-            }
-
             if (movement.TurnHeadLeft)
             {
-                await _picarClient.TurnHeadLeft();
+                return await _picarClient.TurnHeadLeft();
             }
 
             if (movement.TurnHeadRight)
             {
-                await _picarClient.TurnHeadRight();
+                return await _picarClient.TurnHeadRight();
             }
 
             if (movement.Forward)
             {
-                await _picarClient.GoForward();
+                return await _picarClient.GoForward();
             }
 
             if (movement.Backward)
             {
-                await _picarClient.GoBackward();
+                return await _picarClient.GoBackward();
             }
 
             if (movement.Left)
             {
-                await _picarClient.GoLeft();
+                return await _picarClient.GoLeft();
             }
 
             if (movement.Right)
             {
-                await _picarClient.GoRight();
+                return await _picarClient.GoRight();
             }
+
+            return new MovementChangedResponse { ResponseCode = MovementChangedResponseCodes.InvalidCommand };
         }
     }
 }

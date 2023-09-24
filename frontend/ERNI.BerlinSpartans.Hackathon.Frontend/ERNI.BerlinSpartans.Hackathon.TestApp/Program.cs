@@ -4,6 +4,7 @@ using ERNI.BerlinSpartans.Hackathon.Services.MqttClient.Models;
 using Microsoft.Extensions.Logging;
 using MQTTnet;
 using MQTTnet.Implementations;
+using System.Diagnostics;
 
 var options = new MqttClientConnectionOptions
 {
@@ -18,7 +19,7 @@ var mqttClient = new MqttClientService(options, logger);
 
 mqttClient.ApplicationMessageReceived += e =>
 {
-    Console.WriteLine(e.ApplicationMessage.ConvertPayloadToString());
+    Debug.WriteLine(e.ApplicationMessage.ConvertPayloadToString());
     return Task.CompletedTask;
 };
 
@@ -84,6 +85,9 @@ while (true)
                     currentAngle = Math.Max(currentAngle - 1, angleMinValue);
                     var command = MqttCommandFactory.SetDirection(currentAngle);
                     await mqttClient.SendCommandAsync(command)!;
+
+                    var cameraCommand = MqttCommandFactory.SetHeadRotate(currentAngle);
+                    await mqttClient.SendCommandAsync(cameraCommand)!;
                 }
                 break;
             case ConsoleKey.D:
@@ -91,6 +95,9 @@ while (true)
                     currentAngle = Math.Min(currentAngle + 1, angleMaxValue);
                     var command = MqttCommandFactory.SetDirection(currentAngle);
                     await mqttClient.SendCommandAsync(command)!;
+
+                    var cameraCommand = MqttCommandFactory.SetHeadRotate(currentAngle);
+                    await mqttClient.SendCommandAsync(cameraCommand)!;
                 }
                 break;
             default:

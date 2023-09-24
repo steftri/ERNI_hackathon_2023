@@ -1,18 +1,31 @@
 ﻿using ERNI.BerlinSpartans.Hackathon.Services.MqttClient.Models;
+using MQTTnet.Client;
 
-namespace ERNI.BerlinSpartans.Hackathon.Services.MqttClient;
-
-/// <summary>
-/// Interface for the Mqtt Client used to connect to the broker served by the device.
-/// </summary>
-public interface IMqttClientService
+namespace ERNI.BerlinSpartans.Hackathon.Services.MqttClient
 {
-    /// <summary>
-    /// Sends a command to the broker.
-    /// </summary>
-    /// <param name="command">The command to be sent.</param>
-    /// <returns>
-    /// True if the command was processed within the timeout, otherwise false.
-    /// </returns>
-    Task<bool> SendCommandAsync(MqttCommand command);
+    public interface IMqttClientService: IDisposable
+    {
+        /// <summary>
+        /// Event raised when receiving a message from the broker.
+        /// </summary>
+        event Func<MqttApplicationMessageReceivedEventArgs, Task>? ApplicationMessageReceived;
+
+        /// <summary>
+        /// Connects the client to the broker.
+        /// </summary>
+        /// <returns></returns>
+        Task<MqttClientConnectResult?> Connect();
+
+        /// <summary>
+        /// Disconnects the client.
+        /// </summary>
+        void Disconnect();
+
+        /// <summary>
+        /// Sends a command to the client.
+        /// </summary>
+        /// <param name="command"></param>
+        /// <returns></returns>
+        Task<MqttClientPublishResult>? SendCommandAsync(MqttCommand command);
+    }
 }

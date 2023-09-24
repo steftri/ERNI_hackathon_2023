@@ -100,6 +100,15 @@ The software shall be able to receive and process remote control commands.
 
 
 
+libzbar0: https://pypi.org/project/pyzbar/, version 0.1.9
+git python3-pip python3-setuptools python3-smbus libzbar0
+
+https://github.com/sunfounder/robot-hat.git
+https://github.com/sunfounder/vilib.git
+
+
+
+
 
 ## Additional Information
 

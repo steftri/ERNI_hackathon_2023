@@ -13,8 +13,24 @@
     /// </summary>
     public class MovementChangedResponse
     {
-        public MovementChangedResponseCodes ResponseCode { get; set; }
+        public int CurrentSpeed { get; set; }
+        public int CurrentDirectionAngle { get; set; }
+        public int CurrentHeadAngle { get; set; }
 
-        public string Message { get; set; }
+        public List<CommandResponse> CommandResponses { get; set; } = new();
+
+        public MovementChangedResponse WithCurrentValues(int speed, int direction, int cameraAngle) 
+        { 
+            this.CurrentSpeed = speed;
+            this.CurrentDirectionAngle = direction;
+            this.CurrentHeadAngle = cameraAngle;
+            return this;
+        }
+
+        public MovementChangedResponse WithCommandResponses(List<CommandResponse> commandResponses)
+        {
+            this.CommandResponses = commandResponses;
+            return this;
+        }
     }
 }

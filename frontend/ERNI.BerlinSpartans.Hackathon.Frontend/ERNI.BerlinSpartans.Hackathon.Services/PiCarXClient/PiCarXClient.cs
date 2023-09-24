@@ -11,6 +11,14 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
     {
         private readonly IMqttClientService _mqttClientService;
 
+        private const int SpeedIncrement = 10;
+        private const int DirectionAngleIncrement = 45;
+        private const int HeadAngleIncrement = 45;
+
+        public int CurrentSpeed { get; set; }
+        public int CurrentDirectionAngle { get; set; }
+        public int CurrentHeadAngle { get; set; }
+
         public PiCarXClient(IMqttClientService mqttClientService)
         {
             _mqttClientService = mqttClientService;
@@ -19,12 +27,28 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
         /// <summary>
         /// Connects the MQTT service to the robot.
         /// </summary>
-        public void Connect()
+        public async Task Connect()
         {
             if (!_mqttClientService.IsConnected())
             {
-                _mqttClientService.Connect().Wait();
+                await _mqttClientService.Connect();
             }
+        }
+
+        /// <summary>
+        /// <inheritdoc/>
+        /// </summary>
+        public async Task<MovementChangedResponse> Reset()
+        {
+            var commandResponses = new List<CommandResponse>();
+
+            commandResponses.Add(await SendCommandAsync(MqttCommandFactory.SetDirection(0), () => CurrentDirectionAngle = 0));
+            commandResponses.Add(await SendCommandAsync(MqttCommandFactory.SetSpeed(0), () => CurrentSpeed = 0));
+            commandResponses.Add(await SendCommandAsync(MqttCommandFactory.SetHeadRotate(0), () => CurrentHeadAngle = 0));
+
+            return new MovementChangedResponse()
+                .WithCurrentValues(CurrentSpeed, CurrentDirectionAngle, CurrentHeadAngle)
+                .WithCommandResponses(commandResponses);
         }
 
         /// <summary>
@@ -32,7 +56,12 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
         /// </summary>
         public async Task<MovementChangedResponse> GoBackward()
         {
-            return await SendCommandAsync(MqttCommandFactory.SetSpeed(0));
+            var commandResponses = new List<CommandResponse>();
+            commandResponses.Add(await SendCommandAsync(MqttCommandFactory.SetSpeed(0), () => CurrentSpeed = 0));
+
+            return new MovementChangedResponse()
+                .WithCurrentValues(CurrentSpeed, CurrentDirectionAngle, CurrentHeadAngle)
+                .WithCommandResponses(commandResponses);
         }
 
         /// <summary>
@@ -40,7 +69,14 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
         /// </summary>
         public async Task<MovementChangedResponse> GoForward()
         {
-            return await SendCommandAsync(MqttCommandFactory.SetDirection(0));
+            var commandResponses = new List<CommandResponse>();
+
+            commandResponses.Add(await SendCommandAsync(MqttCommandFactory.SetSpeed(SpeedIncrement), () => CurrentSpeed = SpeedIncrement));
+            commandResponses.Add(await SendCommandAsync(MqttCommandFactory.SetDirection(0), () => CurrentDirectionAngle = 0));
+
+            return new MovementChangedResponse()
+                .WithCurrentValues(CurrentSpeed, CurrentDirectionAngle, CurrentHeadAngle)
+                .WithCommandResponses(commandResponses);
         }
 
         /// <summary>
@@ -48,7 +84,13 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
         /// </summary>
         public async Task<MovementChangedResponse> GoLeft()
         {
-            return await SendCommandAsync(MqttCommandFactory.SetDirection(-45));
+            var commandResponses = new List<CommandResponse>();
+            
+            commandResponses.Add(await SendCommandAsync(MqttCommandFactory.SetDirection(-DirectionAngleIncrement), () => CurrentDirectionAngle = -DirectionAngleIncrement));
+            
+            return new MovementChangedResponse()
+                .WithCurrentValues(CurrentSpeed, CurrentDirectionAngle, CurrentHeadAngle)
+                .WithCommandResponses(commandResponses);
         }
 
         /// <summary>
@@ -56,7 +98,13 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
         /// </summary>
         public async Task<MovementChangedResponse> GoRight()
         {
-            return await SendCommandAsync(MqttCommandFactory.SetDirection(45));
+            var commandResponses = new List<CommandResponse>();            
+            
+            commandResponses.Add(await SendCommandAsync(MqttCommandFactory.SetDirection(DirectionAngleIncrement), ()=> CurrentDirectionAngle = DirectionAngleIncrement));
+
+            return new MovementChangedResponse()
+                .WithCurrentValues(CurrentSpeed, CurrentDirectionAngle, CurrentHeadAngle)
+                .WithCommandResponses(commandResponses);
         }
 
         /// <summary>
@@ -64,7 +112,13 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
         /// </summary>
         public async Task<MovementChangedResponse> TurnHeadLeft()
         {
-            return await SendCommandAsync(MqttCommandFactory.SetHeadTilt(-45));
+            var commandResponses = new List<CommandResponse>();
+            
+            commandResponses.Add(await SendCommandAsync(MqttCommandFactory.SetHeadRotate(-HeadAngleIncrement), ()=>CurrentHeadAngle = -HeadAngleIncrement));
+            
+            return new MovementChangedResponse()
+                .WithCurrentValues(CurrentSpeed, CurrentDirectionAngle, CurrentHeadAngle)
+                .WithCommandResponses(commandResponses);
         }
 
         /// <summary>
@@ -72,37 +126,49 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
         /// </summary>
         public async Task<MovementChangedResponse> TurnHeadRight()
         {
-            return await SendCommandAsync(MqttCommandFactory.SetHeadTilt(45));
+            var commandResponses = new List<CommandResponse>();
+
+            commandResponses.Add(await SendCommandAsync(MqttCommandFactory.SetHeadRotate(HeadAngleIncrement), () => CurrentHeadAngle = HeadAngleIncrement));
+
+            return new MovementChangedResponse()
+                .WithCurrentValues(CurrentSpeed, CurrentDirectionAngle, CurrentHeadAngle)
+                .WithCommandResponses(commandResponses);
         }
 
         /// <summary>
         /// Helper method which handles sending commands to the robot.
         /// </summary>
         /// <param name="mqttCommand">The command to send.</param>
+        /// <param name="callback">Funciton invoked in case of success.</param>
         /// <returns>A response indicating the result of the command.</returns>
-        private async Task<MovementChangedResponse> SendCommandAsync(MqttCommand mqttCommand)
+        private async Task<CommandResponse> SendCommandAsync(MqttCommand mqttCommand, Action? callback = null)
         {
             try
             {
                 if (!_mqttClientService.IsConnected())
                 {
-                    return new MovementChangedResponse { ResponseCode = MovementChangedResponseCodes.NotConnected, Message = "The application could not connect to the robot." };
+                    return new CommandResponse()
+                        .WithError(MovementChangedResponseCodes.NotConnected, "The application could not connect to the robot.");
                 }
 
-                var result = await _mqttClientService.SendCommandAsync(mqttCommand);
+                var result = await _mqttClientService.SendCommandAsync(mqttCommand)!;
 
                 if (result.IsSuccess)
                 {
-                    return new MovementChangedResponse { ResponseCode = MovementChangedResponseCodes.Success, Message = "The command was successfully sent to the robot." };
+                    callback?.Invoke();
+                    return new CommandResponse()
+                        .WithError(MovementChangedResponseCodes.Success, "The command was successfully sent to the robot.");
                 }
                 else
                 {
-                    return new MovementChangedResponse { ResponseCode = MovementChangedResponseCodes.GenericError, Message = result.ReasonString };
+                    return new CommandResponse()
+                        .WithError(MovementChangedResponseCodes.GenericError, result.ReasonString);
                 }
             }
             catch (Exception ex)
             {
-                return new MovementChangedResponse { ResponseCode = MovementChangedResponseCodes.GenericError, Message = ex.Message };
+                return new CommandResponse()
+                    .WithError(MovementChangedResponseCodes.GenericError, ex.Message);
             }
         }
     }

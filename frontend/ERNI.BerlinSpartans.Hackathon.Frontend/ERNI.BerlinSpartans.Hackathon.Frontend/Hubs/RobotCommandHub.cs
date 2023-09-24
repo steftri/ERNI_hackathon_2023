@@ -1,7 +1,4 @@
-﻿using ERNI.BerlinSpartans.Hackathon.Frontend.Hubs.Model;
-using ERNI.BerlinSpartans.Hackathon.Services.MqttClient;
-using ERNI.BerlinSpartans.Hackathon.Services.MqttClient.Models;
-using ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient;
+﻿using ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient;
 using ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient.Model;
 
 using Microsoft.AspNetCore.SignalR;
@@ -60,7 +57,7 @@ namespace ERNI.BerlinSpartans.Hackathon.Frontend.Hubs
                 return await _picarClient.GoRight();
             }
 
-            return new MovementChangedResponse { ResponseCode = MovementChangedResponseCodes.InvalidCommand };
+            throw new NotImplementedException();
         }
     }
 }

@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient.Model
+﻿namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient.Model
 {
     public struct Movement
     {

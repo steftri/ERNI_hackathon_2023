@@ -39,6 +39,7 @@
         </div>
     </div>
 </div>
+<div id="errorMessage"></div>
 
 @section Scripts {
     <script src="~/js/keyboardlistener.js"></script>
@@ -56,17 +57,44 @@
         $(keyBoardListener).bind('movementChanged', function (event, movement) {
             self.setUiState(movement);
 
-            connection.invoke("MovementChanged", movement).catch(function (err) {
-                return console.error(err.toString());
-            });
+            connection.invoke("MovementChanged", movement)
+                .then(function (msg) {
+                    var rsp = msg.commandResponses;
+                    if (rsp && rsp.length > 0) {
+                        var err = '';
+                        for (var i = 0; i < rsp.length; i++) {
+                            if (rsp[i].responseCode != 0) {
+                                err += rsp[i].message + "<br/>"
+                            }
+                        }
+                        document.getElementById("errorMessage").innerHTML = err;
+                    }
+                })
+                .catch(function (err) {
+                    return console.error(err.toString());
+                });
         });
 
         $(htmlElementListener).bind('movementChanged', function (event, movement) {
             self.setUiState(movement);
 
-            connection.invoke("MovementChanged", movement).catch(function (err) {
-                return console.error(err.toString());
-            });
+            connection.invoke("MovementChanged", movement)
+                .then(function (msg) {
+                    var rsp = msg.commandResponses;
+                    if (rsp && rsp.length > 0) {
+                        var err = '';
+                        for (var i = 0; i < rsp.length; i++) {
+                            if (rsp[i].responseCode != 0) {
+                                err += rsp[i].message + "<br/>"
+                            }
+                        }
+                        document.getElementById("errorMessage").innerHTML = err;
+                    }
+
+                })
+                .catch(function (err) {
+                    return console.error(err.toString());
+                });
         });
 
         function setUiState(movement) {

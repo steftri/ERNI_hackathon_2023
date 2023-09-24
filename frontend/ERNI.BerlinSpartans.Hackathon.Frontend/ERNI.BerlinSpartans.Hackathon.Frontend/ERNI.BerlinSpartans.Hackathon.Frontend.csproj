@@ -6,4 +6,8 @@
     <ImplicitUsings>enable</ImplicitUsings>
   </PropertyGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\ERNI.BerlinSpartans.Hackathon.Services\ERNI.BerlinSpartans.Hackathon.Services.csproj" />
+  </ItemGroup>
+
 </Project>

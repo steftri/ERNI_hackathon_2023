@@ -46,19 +46,33 @@
 @section Scripts {
     <script src="~/js/keyboardlistener.js"></script>
     <script src="~/js/htmlelementlistener.js"></script>
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
     <script>
         var keyBoardListener = new KeyBoardListener();
         var htmlElementListener = new HtmlElementListener("button");
+        var connection = new signalR.HubConnectionBuilder().withUrl("/robotcommandhub").build();
+
+        connection.start().catch(function (err) {
+            return console.error(err.toString());
+        });
 
         $(keyBoardListener).bind('movementChanged', function (event, movement) {
-           self.setUiState(movement);
+            self.setUiState(movement);
+
+            connection.invoke("MovementChanged", movement).catch(function (err) {
+                return console.error(err.toString());
+            });
         });
 
         $(htmlElementListener).bind('movementChanged', function (event, movement) {
             self.setUiState(movement);
+
+            connection.invoke("MovementChanged", movement).catch(function (err) {
+                return console.error(err.toString());
+            });
         });
 
-        function setUiState(movement){
+        function setUiState(movement) {
             var accelerate = $('.button-Shift img');
             var decelerate = $('.button-Ctrl img');
             var turnHeadLeft = $('.button-Q img');

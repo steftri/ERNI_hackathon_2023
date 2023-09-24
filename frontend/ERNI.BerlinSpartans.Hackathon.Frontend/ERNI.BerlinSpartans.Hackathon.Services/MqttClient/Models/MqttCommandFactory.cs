@@ -29,7 +29,7 @@ public static class MqttCommandFactory
         return GetCommand(payload);
     }
 
-    public static MqttCommand Stop(decimal value)
+    public static MqttCommand Stop()
     {
         var payload = new[]
         {

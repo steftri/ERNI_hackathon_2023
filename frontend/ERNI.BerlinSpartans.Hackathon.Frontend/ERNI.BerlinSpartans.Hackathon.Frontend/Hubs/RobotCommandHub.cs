@@ -14,9 +14,9 @@ namespace ERNI.BerlinSpartans.Hackathon.Frontend.Hubs
         /// <summary>
         /// The concrete implementation of the PiCar X robot.
         /// </summary>
-        private readonly IPiCarXClient _picarClient;
+        private readonly IPiCarXClientService _picarClient;
 
-        public RobotCommandHub(IPiCarXClient picarClient, ILogger<RobotCommandHub> logger)
+        public RobotCommandHub(IPiCarXClientService picarClient, ILogger<RobotCommandHub> logger)
         {
             _picarClient = picarClient;
         }

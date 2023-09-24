@@ -10,7 +10,7 @@ builder.Services.AddSignalR();
 
 builder.Services.Configure<MqttClientConnectionOptions>(builder.Configuration.GetSection("MQTT"));
 builder.Services.AddSingleton<IMqttClientService, MqttClientService>();
-builder.Services.AddSingleton<IPiCarXClient, PiCarXClient>();
+builder.Services.AddSingleton<IPiCarXClientService, PiCarXClientService>();
 
 var app = builder.Build();
 

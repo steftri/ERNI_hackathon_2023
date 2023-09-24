@@ -7,26 +7,28 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
     /// <summary>
     /// <inheritdoc/>
     /// </summary>
-    public class PiCarXClient : IPiCarXClient
-    {
+    public class PiCarXClientService : IPiCarXClientService
+    {        
+        private int SpeedIncrement = 10;
+        private int DirectionAngleIncrement = 15;
+        private int HeadAngleIncrement = 15;
+
+        private int CurrentSpeed;        
+        private int CurrentDirectionAngle;
+        private int CurrentHeadAngle;
+
         private readonly IMqttClientService _mqttClientService;
 
-        private const int SpeedIncrement = 10;
-        private const int DirectionAngleIncrement = 15;
-        private const int HeadAngleIncrement = 15;
-
-        public int CurrentSpeed { get; set; }
-        public int CurrentDirectionAngle { get; set; }
-        public int CurrentHeadAngle { get; set; }
-
-        public PiCarXClient(IMqttClientService mqttClientService)
+        /// <summary>
+        /// Creates a new instance of the <see cref="PiCarXClientService"/> class.
+        /// </summary>
+        /// <param name="mqttClientService">An instance of <see cref="IMqttClientService"/>.</param>
+        public PiCarXClientService(IMqttClientService mqttClientService)
         {
             _mqttClientService = mqttClientService;
         }
 
-        /// <summary>
-        /// Connects the MQTT service to the robot.
-        /// </summary>
+        /// <inheritdoc/>
         public async Task Connect()
         {
             if (!_mqttClientService.IsConnected())
@@ -35,9 +37,15 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
             }
         }
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
+        public void SetDefaultIncrements(int speed, int direction, int headAngle)
+        {
+            SpeedIncrement = speed;
+            DirectionAngleIncrement = direction;
+            HeadAngleIncrement = headAngle;
+        }
+
+        /// <inheritdoc/>
         public async Task<MovementChangedResponse> Reset()
         {
             var commandResponses = new List<CommandResponse>();
@@ -51,9 +59,7 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
                 .WithCommandResponses(commandResponses);
         }
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
         public async Task<MovementChangedResponse> GoBackward()
         {
             var commandResponses = new List<CommandResponse>();
@@ -65,9 +71,7 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
                 .WithCommandResponses(commandResponses);
         }
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
         public async Task<MovementChangedResponse> GoForward()
         {
             var commandResponses = new List<CommandResponse>();
@@ -82,9 +86,7 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
                 .WithCommandResponses(commandResponses);
         }
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
         public async Task<MovementChangedResponse> GoLeft()
         {
             var commandResponses = new List<CommandResponse>();
@@ -96,9 +98,7 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
                 .WithCommandResponses(commandResponses);
         }
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
         public async Task<MovementChangedResponse> GoRight()
         {
             var commandResponses = new List<CommandResponse>();
@@ -110,9 +110,7 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
                 .WithCommandResponses(commandResponses);
         }
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
         public async Task<MovementChangedResponse> TurnHeadLeft()
         {
             var commandResponses = new List<CommandResponse>();
@@ -124,9 +122,7 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
                 .WithCommandResponses(commandResponses);
         }
 
-        /// <summary>
         /// <inheritdoc/>
-        /// </summary>
         public async Task<MovementChangedResponse> TurnHeadRight()
         {
             var commandResponses = new List<CommandResponse>();
@@ -138,11 +134,23 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
                 .WithCommandResponses(commandResponses);
         }
 
+        /// <inheritdoc/>
+        public async Task<MovementChangedResponse> Stop()
+        {
+            var commandResponses = new List<CommandResponse>();
+
+            commandResponses.Add(await SendCommandAsync(MqttCommandFactory.Stop(), () => CurrentSpeed = 0));
+
+            return new MovementChangedResponse()
+                .WithCurrentValues(CurrentSpeed, CurrentDirectionAngle, CurrentHeadAngle)
+                .WithCommandResponses(commandResponses);
+        }
+
         /// <summary>
         /// Helper method which handles sending commands to the robot.
         /// </summary>
         /// <param name="mqttCommand">The command to send.</param>
-        /// <param name="callback">Funciton invoked in case of success.</param>
+        /// <param name="callback">Callback function, invoked in case of success.</param>
         /// <returns>A response indicating the result of the command.</returns>
         private async Task<CommandResponse> SendCommandAsync(MqttCommand mqttCommand, Action? callback = null)
         {

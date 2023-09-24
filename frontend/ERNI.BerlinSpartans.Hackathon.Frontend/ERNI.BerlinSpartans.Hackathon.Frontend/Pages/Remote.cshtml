@@ -1,0 +1,128 @@
+﻿@page
+@model RemoteModel
+
+@section Styles{
+    <link rel="stylesheet" href="~/css/remote.css" />
+}
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-md">
+            <div class="camera-feed">Camera feed</div>
+        </div>
+        <div class="col-md">
+            <div class="row">
+                <div class="col-md button-Shift">
+                    <img src="images/plus.png" />
+                </div>
+                <div class="col-md button-Q">
+                    <img src="images/counter-clockwise.png" />
+                </div>
+                <div class="col-md button-W">
+                    <img src="images/arrow-up.png" />
+                </div>
+                <div class="col-md button-E">
+                    <img src="images/clockwise.png" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md button-Ctrl">
+                    <img src="images/minus.png" />
+                </div>
+                <div class="col-md button-A">
+                    <img src="images/arrow-left.png" />
+                </div>
+                <div class="col-md button-S">
+                    <img src="images/arrow-down.png" />
+                </div>
+                <div class="col-md button-D">
+                    <img src="images/arrow-right.png" />
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+@section Scripts {
+    <script src="~/js/keyboardlistener.js"></script>
+    <script src="~/js/htmlelementlistener.js"></script>
+    <script>
+        var keyBoardListener = new KeyBoardListener();
+        var htmlElementListener = new HtmlElementListener("button");
+
+        $(keyBoardListener).bind('movementChanged', function (event, movement) {
+           self.setUiState(movement);
+        });
+
+        $(htmlElementListener).bind('movementChanged', function (event, movement) {
+            self.setUiState(movement);
+        });
+
+        function setUiState(movement){
+            var accelerate = $('.button-Shift img');
+            var decelerate = $('.button-Ctrl img');
+            var turnHeadLeft = $('.button-Q img');
+            var turnHeadRight = $('.button-E img');
+            var forward = $('.button-W img');
+            var backward = $('.button-S img');
+            var left = $('.button-A img');
+            var right = $('.button-D img');
+
+            if (movement.forward === true) {
+                $(forward).attr('src', 'images/arrow-up-pressed.png');
+            }
+            else {
+                $(forward).attr('src', 'images/arrow-up.png');
+            }
+
+            if (movement.backward === true) {
+                $(backward).attr('src', 'images/arrow-down-pressed.png');
+            }
+            else {
+                $(backward).attr('src', 'images/arrow-down.png');
+            }
+
+            if (movement.left === true) {
+                $(left).attr('src', 'images/arrow-left-pressed.png');
+            }
+            else {
+                $(left).attr('src', 'images/arrow-left.png');
+            }
+
+            if (movement.right === true) {
+                $(right).attr('src', 'images/arrow-right-pressed.png');
+            }
+            else {
+                $(right).attr('src', 'images/arrow-right.png');
+            }
+
+            if (movement.accelerate === true) {
+                $(accelerate).attr('src', 'images/plus-pressed.png');
+            }
+            else {
+                $(accelerate).attr('src', 'images/plus.png');
+            }
+
+            if (movement.decelerate === true) {
+                $(decelerate).attr('src', 'images/minus-pressed.png');
+            }
+            else {
+                $(decelerate).attr('src', 'images/minus.png');
+            }
+
+            if (movement.turnHeadLeft === true) {
+                $(turnHeadLeft).attr('src', 'images/counter-clockwise-pressed.png');
+            }
+            else {
+                $(turnHeadLeft).attr('src', 'images/counter-clockwise.png');
+            }
+
+            if (movement.turnHeadRight === true) {
+                $(turnHeadRight).attr('src', 'images/clockwise-pressed.png');
+            }
+            else {
+                $(turnHeadRight).attr('src', 'images/clockwise.png');
+            }
+        }
+    </script>
+}

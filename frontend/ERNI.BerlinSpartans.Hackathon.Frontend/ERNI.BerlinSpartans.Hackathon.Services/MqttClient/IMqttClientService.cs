@@ -22,6 +22,12 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.MqttClient
         void Disconnect();
 
         /// <summary>
+        /// Returns true if the client is connected.
+        /// </summary>
+        /// <returns></returns>
+        bool IsConnected();
+
+        /// <summary>
         /// Sends a command to the client.
         /// </summary>
         /// <param name="command"></param>

@@ -75,6 +75,11 @@ public class MqttClientService : IMqttClientService, IDisposable
         return this.ApplicationMessageReceived?.Invoke(e) ?? Task.CompletedTask;
     }
 
+    public bool IsConnected()
+    {
+        return this.mqttClient.IsConnected;
+    }
+
     public async Task<MqttClientConnectResult?> Connect()
     {
         if (this.mqttClient.IsConnected)

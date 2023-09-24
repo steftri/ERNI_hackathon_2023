@@ -6,7 +6,7 @@ using NSubstitute;
 using Microsoft.Extensions.Options;
 using ERNI.BerlinSpartans.Hackathon.Services.MqttClient.Models;
 using Microsoft.Extensions.Logging;
-using ERNI.BerlinSpartans.Hackathon.Services.Tests.Mocks;
+using ERNI.BerlinSpartans.Hackathon.Services.MqttClient.Extensions;
 
 namespace ERNI.BerlinSpartans.Hackathon.Services.Tests;
 
@@ -23,7 +23,7 @@ public class MqttClientServiceTests
         {
             BrokerAddress = "127.0.0.1",
             Port = 18835,
-            SpinTimeout = 100,
+            IdleTimeoutInMinutes = 5,
         };
 
         var clientOptions = Substitute.For<IOptions<MqttClientConnectionOptions>>();
@@ -35,7 +35,7 @@ public class MqttClientServiceTests
         var command = new MqttCommand
         {
             Topic = "MyTopic",
-            Payload = "MyPayload"
+            Payload =  "MyPayload".ToJson()
         };
 
         string capturedTopic = "";
@@ -50,11 +50,13 @@ public class MqttClientServiceTests
             return CompletedTask.Instance;
         };        
         await server.StartAsync();
-        Thread.Sleep(1000);
+        
 
         // Act
-        var response = await client.SendCommandAsync(command)!;       
-                
+        await client.Connect();
+        var response = await client.SendCommandAsync(command)!;
+        Thread.Sleep(1000);
+
         // Assert
         Assert.True(response.IsSuccess);
         Assert.Equal(command.Topic, capturedTopic);
@@ -69,7 +71,7 @@ public class MqttClientServiceTests
         {
             BrokerAddress = "127.0.0.1",
             Port = 18835,
-            SpinTimeout = 100,
+            IdleTimeoutInMinutes = 1,
         };
 
         var clientOptions = Substitute.For<IOptions<MqttClientConnectionOptions>>();

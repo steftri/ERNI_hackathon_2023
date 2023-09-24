@@ -22,9 +22,9 @@
         public int? Port { get; set; }
 
         /// <summary>
-        /// Gets or sets the number of milliseconds that are waited before a command is discarded.
+        /// Gets or sets the number minutes after which the client disconnects.
         /// </summary>
-        public int SpinTimeout { get; set; }
+        public int IdleTimeoutInMinutes { get; set; }
 
     }
 }

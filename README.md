@@ -17,51 +17,65 @@ The base for the project is the PiCar-X by SunFounder with a Rapberry Pi 4.
 
 ## Intended Use
 
-A robot shall be able to drive thorugh a pre-defined parcours, while the operator is not physically present at the location of the parcours. 
+A robot shall be able to drive thorugh a pre-defined parcours as fast as possible, while the operator is not physically present at the location of the parcours. 
 
 
 ## Requirements
 
-
 ### Stakeholder Requirements
 
-#### StR01 - Solving a parcours
-With the robot, it shall be possible to perform a drive through a parcours with the operator not beeing physically present at the location. 
+#### StR01 - Solving a parcours from remote
+With the robot, it shall be possible to perform a drive through a parcours with the operator not beeing physically present at the location as quickly as possible. 
+
 
 
 ### System Requirements
 
 
-#### SysR01 - Video
-The system shall be able to display a video captured by the robot in real-time on a remote device
-
 #### SysR02 - Remote Control
-The system shall be able to controll the movement of the robot remotely
+The system shall be able to control the movement of the robot remotely.
 
+#### SysR03 - Lane Assist
+The system shall provide a lane assist.
 
 
 ### Frontend Software Requirements
 
+#### UiSW01 - Web application
+The software shall run on a web server outside of the local network 
 
+#### UiSW02 - Manual control
+The software shall provide the posibility to control the robot manually.
 
+#### UiSW03 - Lane Assist support
+The software shall provide the posibility to engage the lane assist.
 
 
 ### Firmware SW Requirements
 
-#### SW01 Environment
+#### SW01 - Environment
 The software shall run on a Raspberry Pi 4 with a Robot HAT board.
 
-#### SW02 Motion
-The software shall be able to control the forward and backward motion with adjustable speed.
+#### SW02 - Motion
+The software shall be able to control the forward and backward motion.
 
-#### SW03 Steering
+#### SW03 - Steering
 The software shall be able to control the direction of the robot's movement.
 
-#### SW04 Video
+#### SW04 - Video
 The software shall be able to provide a real-time video from the robot's camera.
 
-#### SW05 RemoteControl
+#### SW05 - RemoteControl
 The software shall be able to receive and process remote control commands.
+
+#### SW06 - Lane Assist
+The software shall be able to follow a given track.
+
+#### SW07 - Minimum Turn radius
+The software shall be able to follow a track with a radius of down to 30 cm.
+
+#### SW08 - Gaps in the track
+The software shall be able to be tolerant against gaps in the track marking of up to 25 cm.
 
 
 
@@ -77,9 +91,15 @@ The software shall be able to receive and process remote control commands.
 
 | System Requirements        | Traces to |
 |----------------------------|-----------|
-| SysR01 - Video             |           |
-| SysR02 - Remote Control    |           |
+| SysR02 - Remote Control    | UiSW01 - Web application<br>UiSW02 - Manual control<br>SW01 - Environment<br>SW02 - Motion<br>SW03 - Steering<br>SW04 - Video<br>SW05 - RemoteControl   |
+| SysR03 - Lane Assist       | UiSW03 - Lane Assist support<br>SW07 - Minimum Turn radius<br>SW08 - Gaps in the track   |
 
+
+## Software Architecture
+
+The firmware is composed of different modules
+ * The Lane Controller is responsible for calculating the position relatively to the track. Input data are the three grey values from the grey scale sensor. Output data is a value in float, while 0 means the car is exactly above the track, negative values means it is left of the track, positive values right.
+ * the PiControlle is responsible for calculating a direction command as the result of the calculated position above the track. 
 
 
 ## Software Development
@@ -94,20 +114,10 @@ The software shall be able to receive and process remote control commands.
  * VSCode extension Python, Version v2023.6.1
 
 ### Firmware SOUP 
- * EzBlock OS
- * mosquitto, apt-get, Version v3.2/v3.1.1
- * vilib, apt-get, latest version 
-
-
-
-libzbar0: https://pypi.org/project/pyzbar/, version 0.1.9
-git python3-pip python3-setuptools python3-smbus libzbar0
-
-https://github.com/sunfounder/robot-hat.git
-https://github.com/sunfounder/vilib.git
-
-
-
+ * Raspberry Pi OS Lite (32-bit) with git, python3-pip, python3-setuptools, python3-smbus and 
+ * Robot-Hat v2.0
+ * vilib v0.0.6
+ * PiCar-X v2.0
 
 
 ## Additional Information

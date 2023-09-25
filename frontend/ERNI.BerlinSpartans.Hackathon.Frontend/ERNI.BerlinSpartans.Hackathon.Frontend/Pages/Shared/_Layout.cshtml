@@ -8,7 +8,7 @@
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
     @await RenderSectionAsync("Styles", required: false)
 </head>
-<body>
+<body class="bg-spartans">
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-dark navbar-blue border-bottom box-shadow mb-3">
             <div class="container">
@@ -23,7 +23,7 @@
                             <a class="nav-link" asp-area="" asp-page="/Index">Home</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" asp-area="" asp-page="/Remote">Remote</a>
+                            <a class="nav-link" asp-area="" asp-page="/Remote">Race!</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-page="/Help">Help</a>
@@ -39,7 +39,7 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
+    <footer class="border-top footer fixed-bottom text-muted">
         <div class="container">
             &copy; 2023 - ERNI Deutschland GmbH
         </div>

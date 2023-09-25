@@ -3,8 +3,20 @@
     width: 100% ;
     background-color: #000000;
     color: #FFFFFF;
+    vertical-align:middle;
+    border-radius: 15px;
 }
 
 .col-md{
     text-align:center;
+}
+
+.control-board {
+    border: 1px solid black; 
+    margin-top:5px; 
+    background-color: wheat; 
+    border-radius: 15px;
+}
+.control-board img {
+    cursor:pointer;
 }

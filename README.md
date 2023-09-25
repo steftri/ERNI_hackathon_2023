@@ -36,15 +36,24 @@ With the robot, it shall be possible to perform a drive through a parcours with 
 The system shall be able to display a video captured by the robot in real-time on a remote device
 
 #### SysR02 - Remote Control
-The system shall be able to controll the movement of the robot remotely
+The system shall be able to control the movement of the robot remotely
 
 
 
 ### Frontend Software Requirements
+### FR01 Environment
+The application should be accessible from the internet. 
 
+### FR02 Keyboard controls
+The user should be able to control the robot with WASD (driving/steering) and EQ (turning the head). 
+The keyboard controls should be responsive and not laggy.
 
+### FR03 On-screen keyboard
+The user should be able to control the robot with an on-screen keyboard/gamepad.
+The on-scren keyboard should give feedback to the user if it's being pressed.
 
-
+### FR04 Video feed
+The user should see the robot's video feed so they know where they are going.
 
 ### Firmware SW Requirements
 
@@ -98,8 +107,6 @@ The software shall be able to receive and process remote control commands.
  * mosquitto, apt-get, Version v3.2/v3.1.1
  * vilib, apt-get, latest version 
 
-
-
 libzbar0: https://pypi.org/project/pyzbar/, version 0.1.9
 git python3-pip python3-setuptools python3-smbus libzbar0
 
@@ -107,6 +114,22 @@ https://github.com/sunfounder/robot-hat.git
 https://github.com/sunfounder/vilib.git
 
 
+### Tools used for Frontend development
+ * Visual Studio 2022
+
+### Nuget Packages used for the Frontend
+| Package                                  | Version   |                  
+| ---------------------------------------- | ----------|
+| Microsoft.Extensions.Logging.Abstractions| 7.0.1     |
+| Microsoft.Extensions.Options             | 7.0.1     |
+| MQTTnet                                  | 4.3.1.873 |
+| MQTTnet.Extensions.ManagedClient         | 4.3.1.873 |
+| Microsoft.NET.Test.Sdk                   | 17.5.0    |
+| NSubstitute                              | 5.1.0     |
+| xunit                                    | 2.4.2     |
+| xunit.runner.visualstudio                | 2.4.5     |
+| coverlet.collector                       | 3.2.0     |
+| Microsoft.Extensions.Logging             | 7.0.0     |
 
 
 

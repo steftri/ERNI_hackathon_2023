@@ -57,6 +57,11 @@ namespace ERNI.BerlinSpartans.Hackathon.Frontend.Hubs
                 return await _picarClient.GoRight();
             }
 
+            if (movement.StartLane)
+            {
+                return await _picarClient.StartLane();
+            }
+
             throw new NotImplementedException();
         }
     }

@@ -152,6 +152,18 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
                 .WithCommandResponses(commandResponses);
         }
 
+        public async Task<MovementChangedResponse> StartLane()
+        {
+            var commandResponses = new List<CommandResponse>
+            {
+                await SendCommandAsync(MqttCommandFactory.StartLane())
+            };
+
+            return new MovementChangedResponse()
+                .WithCurrentValues(CurrentSpeed, CurrentDirectionAngle, CurrentHeadAngle)
+                .WithCommandResponses(commandResponses);
+        }
+
         /// <summary>
         /// Helper method which handles sending commands to the robot.
         /// </summary>
@@ -190,6 +202,6 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
                 return new CommandResponse()
                     .WithError(MovementChangedResponseCodes.GenericError, ex.Message);
             }
-        }
+        }        
     }
 }

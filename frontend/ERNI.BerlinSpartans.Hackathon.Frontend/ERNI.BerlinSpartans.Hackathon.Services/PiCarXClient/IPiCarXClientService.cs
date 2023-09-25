@@ -63,5 +63,11 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
         /// </summary>
         /// <returns></returns>
         Task<MovementChangedResponse> Stop();
+
+        /// <summary>
+        /// Starts the lane assisted run.
+        /// </summary>
+        /// <returns></returns>
+        Task<MovementChangedResponse> StartLane();
     }
 }

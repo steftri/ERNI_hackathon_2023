@@ -56,6 +56,17 @@ public static class MqttCommandFactory
         return GetCommand(payload);
     }
 
+    public static MqttCommand StartLane()
+    {        
+        var payload = new[]
+        {
+            new {
+                Operation = "start_lane_assist"
+            }
+        }.ToJson();
+        return GetCommand(payload);
+    }
+
     public static MqttCommand SetHeadRotate(decimal value)
     {
         if (value < AngleMinValue || value > AngleMaxValue)

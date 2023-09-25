@@ -7,7 +7,8 @@
         left: false,
         right: false,
         turnHeadLeft: false,
-        turnHeadRight: false
+        turnHeadRight: false,
+        startLane: false
     };
 
     constructor(classSelector) {
@@ -25,6 +26,7 @@
         var buttonA = $('.' + this.classSelector + '-A');
         var buttonS = $('.' + this.classSelector + '-S');
         var buttonD = $('.' + this.classSelector + '-D');
+        var buttonlane = $('.button-lane');
         var self = this;
 
         $(buttonQ).mousedown(function (e) {
@@ -65,6 +67,13 @@
         $(buttonD).mousedown(function (e) {
             if (self.movement.right !== true) {
                 self.movement.right = true;
+                $(self).trigger('movementChanged', self.movement);
+            }
+        });
+
+        $(buttonlane).mousedown(function (e) {
+            if (self.movement.startLane !== true) {
+                self.movement.startLane = true;
                 $(self).trigger('movementChanged', self.movement);
             }
         });

@@ -6,7 +6,8 @@
         left: false,
         right: false,
         turnHeadLeft: false,
-        turnHeadRight: false
+        turnHeadRight: false,
+        startLane: false
     };
 
     constructor() {
@@ -53,6 +54,12 @@
                 case 'D':
                     if (self.movement.right !== true) {
                         self.movement.right = true;
+                        $(self).trigger('movementChanged', self.movement);
+                    }
+                    break;
+                case 'SPACE':
+                    if (self.movement.startLane !== true) {
+                        self.movement.startLane = true;
                         $(self).trigger('movementChanged', self.movement);
                     }
                     break;

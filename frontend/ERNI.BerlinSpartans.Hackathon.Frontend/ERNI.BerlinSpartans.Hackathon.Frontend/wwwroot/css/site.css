@@ -39,3 +39,7 @@ footer{
     background-color: rgba(255, 255, 255, 0.728);
     background-blend-mode: overlay;    
 }
+
+.help-table {
+    background-color: rgb(255, 255, 255, 0.80);
+}

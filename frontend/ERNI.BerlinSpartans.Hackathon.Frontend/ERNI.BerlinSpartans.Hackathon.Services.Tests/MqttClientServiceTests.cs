@@ -11,7 +11,7 @@ using ERNI.BerlinSpartans.Hackathon.Services.MqttClient.Extensions;
 namespace ERNI.BerlinSpartans.Hackathon.Services.Tests;
 
 [Trait("Category", "Services")]
-[Trait("Category", "MqttClient")]
+[Trait("Category", "MqttClientService")]
 public class MqttClientServiceTests
 {    
 
@@ -90,7 +90,7 @@ public class MqttClientServiceTests
         await Assert.ThrowsAsync<MQTTnet.Exceptions.MqttCommunicationException>( () =>  client.SendCommandAsync(command)!);
     }
 
-    private MqttServer GetServer()
+    private static MqttServer GetServer()
     {
         var mqttFactory = new MqttFactory();
         var mqttServerOptions = new MqttServerOptionsBuilder()

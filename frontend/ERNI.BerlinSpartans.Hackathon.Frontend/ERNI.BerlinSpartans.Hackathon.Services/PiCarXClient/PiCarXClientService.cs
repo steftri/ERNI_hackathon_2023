@@ -48,11 +48,12 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
         /// <inheritdoc/>
         public async Task<MovementChangedResponse> Reset()
         {
-            var commandResponses = new List<CommandResponse>();
-
-            commandResponses.Add(await SendCommandAsync(MqttCommandFactory.SetDirection(0), () => CurrentDirectionAngle = 0));
-            commandResponses.Add(await SendCommandAsync(MqttCommandFactory.SetSpeed(0), () => CurrentSpeed = 0));
-            commandResponses.Add(await SendCommandAsync(MqttCommandFactory.SetHeadRotate(0), () => CurrentHeadAngle = 0));
+            var commandResponses = new List<CommandResponse>
+            {
+                await SendCommandAsync(MqttCommandFactory.SetDirection(0), () => CurrentDirectionAngle = 0),
+                await SendCommandAsync(MqttCommandFactory.SetSpeed(0), () => CurrentSpeed = 0),
+                await SendCommandAsync(MqttCommandFactory.SetHeadRotate(0), () => CurrentHeadAngle = 0)
+            };
 
             return new MovementChangedResponse()
                 .WithCurrentValues(CurrentSpeed, CurrentDirectionAngle, CurrentHeadAngle)
@@ -89,9 +90,10 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
         /// <inheritdoc/>
         public async Task<MovementChangedResponse> GoLeft()
         {
-            var commandResponses = new List<CommandResponse>();
-
-            commandResponses.Add(await SendCommandAsync(MqttCommandFactory.SetDirection(-DirectionAngleIncrement), () => CurrentDirectionAngle = -DirectionAngleIncrement));
+            var commandResponses = new List<CommandResponse>
+            {
+                await SendCommandAsync(MqttCommandFactory.SetDirection(-DirectionAngleIncrement), () => CurrentDirectionAngle = -DirectionAngleIncrement)
+            };
 
             return new MovementChangedResponse()
                 .WithCurrentValues(CurrentSpeed, CurrentDirectionAngle, CurrentHeadAngle)
@@ -101,9 +103,10 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
         /// <inheritdoc/>
         public async Task<MovementChangedResponse> GoRight()
         {
-            var commandResponses = new List<CommandResponse>();
-
-            commandResponses.Add(await SendCommandAsync(MqttCommandFactory.SetDirection(DirectionAngleIncrement), () => CurrentDirectionAngle = DirectionAngleIncrement));
+            var commandResponses = new List<CommandResponse>
+            {
+                await SendCommandAsync(MqttCommandFactory.SetDirection(DirectionAngleIncrement), () => CurrentDirectionAngle = DirectionAngleIncrement)
+            };
 
             return new MovementChangedResponse()
                 .WithCurrentValues(CurrentSpeed, CurrentDirectionAngle, CurrentHeadAngle)
@@ -113,9 +116,10 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
         /// <inheritdoc/>
         public async Task<MovementChangedResponse> TurnHeadLeft()
         {
-            var commandResponses = new List<CommandResponse>();
-
-            commandResponses.Add(await SendCommandAsync(MqttCommandFactory.SetHeadRotate(-HeadAngleIncrement), () => CurrentHeadAngle = -HeadAngleIncrement));
+            var commandResponses = new List<CommandResponse>
+            {
+                await SendCommandAsync(MqttCommandFactory.SetHeadRotate(-HeadAngleIncrement), () => CurrentHeadAngle = -HeadAngleIncrement)
+            };
 
             return new MovementChangedResponse()
                 .WithCurrentValues(CurrentSpeed, CurrentDirectionAngle, CurrentHeadAngle)
@@ -125,9 +129,10 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
         /// <inheritdoc/>
         public async Task<MovementChangedResponse> TurnHeadRight()
         {
-            var commandResponses = new List<CommandResponse>();
-
-            commandResponses.Add(await SendCommandAsync(MqttCommandFactory.SetHeadRotate(HeadAngleIncrement), () => CurrentHeadAngle = HeadAngleIncrement));
+            var commandResponses = new List<CommandResponse>
+            {
+                await SendCommandAsync(MqttCommandFactory.SetHeadRotate(HeadAngleIncrement), () => CurrentHeadAngle = HeadAngleIncrement)
+            };
 
             return new MovementChangedResponse()
                 .WithCurrentValues(CurrentSpeed, CurrentDirectionAngle, CurrentHeadAngle)
@@ -137,9 +142,10 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient
         /// <inheritdoc/>
         public async Task<MovementChangedResponse> Stop()
         {
-            var commandResponses = new List<CommandResponse>();
-
-            commandResponses.Add(await SendCommandAsync(MqttCommandFactory.Stop(), () => CurrentSpeed = 0));
+            var commandResponses = new List<CommandResponse>
+            {
+                await SendCommandAsync(MqttCommandFactory.Stop(), () => CurrentSpeed = 0)
+            };
 
             return new MovementChangedResponse()
                 .WithCurrentValues(CurrentSpeed, CurrentDirectionAngle, CurrentHeadAngle)

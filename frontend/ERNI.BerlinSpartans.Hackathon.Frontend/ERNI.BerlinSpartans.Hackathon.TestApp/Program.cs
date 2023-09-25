@@ -3,12 +3,11 @@ using ERNI.BerlinSpartans.Hackathon.Services.MqttClient;
 using ERNI.BerlinSpartans.Hackathon.Services.MqttClient.Models;
 using Microsoft.Extensions.Logging;
 using MQTTnet;
-using MQTTnet.Implementations;
 using System.Diagnostics;
 
 var options = new MqttClientConnectionOptions
 {
-    BrokerAddress = "10.213.90.68",
+    BrokerAddress = "broker.hivemq.com",
     Port = 1883,
     IdleTimeoutInMinutes= 1
 };

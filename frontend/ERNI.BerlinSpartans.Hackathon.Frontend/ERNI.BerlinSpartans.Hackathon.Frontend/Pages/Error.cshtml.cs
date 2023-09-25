@@ -23,6 +23,7 @@ namespace ERNI.BerlinSpartans.Hackathon.Frontend.Razor.Pages
         public void OnGet()
         {
             RequestId = Activity.Current?.Id ?? HttpContext.TraceIdentifier;
+            _logger.LogError("Error while processing the request {requestID}", RequestId);
         }
     }
 }

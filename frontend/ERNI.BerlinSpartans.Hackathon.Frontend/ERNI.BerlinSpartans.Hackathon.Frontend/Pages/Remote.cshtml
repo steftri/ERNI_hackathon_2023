@@ -13,7 +13,9 @@
                 Loading...
             </div>            
             <div style="display: none; margin-top:25%" id="no-video">
-                No video feed available. Ensure that the robot is activated and connected to the network.
+                No video feed available. <br />
+                Ensure that the robot is activated and connected to the network.<br />
+                Reload the page to retry.
             </div>
         </div>
     </div>
@@ -79,47 +81,39 @@
         });
 
         $(keyBoardListener).bind('movementChanged', function (event, movement) {
-            self.setUiState(movement);
-
+            self.setUiState(movement);            
             connection.invoke("MovementChanged", movement)
                 .then(function (msg) {
-                    var rsp = msg.commandResponses;
-                    if (rsp && rsp.length > 0) {
-                        var err = '';
-                        for (var i = 0; i < rsp.length; i++) {
-                            if (rsp[i].responseCode != 0) {
-                                err += rsp[i].message + "<br/>"
-                            }
-                        }
-                        document.getElementById("errorMessage").innerHTML = err;
-                    }
+                    document.getElementById("errorMessage").innerHTML = getErrors(msg);
                 })
-                .catch(function (err) {
+                .catch(function (err) {                    
                     return console.error(err.toString());
                 });
         });
 
         $(htmlElementListener).bind('movementChanged', function (event, movement) {
-            self.setUiState(movement);
-
+            self.setUiState(movement);            
             connection.invoke("MovementChanged", movement)
                 .then(function (msg) {
-                    var rsp = msg.commandResponses;
-                    if (rsp && rsp.length > 0) {
-                        var err = '';
-                        for (var i = 0; i < rsp.length; i++) {
-                            if (rsp[i].responseCode != 0) {
-                                err += rsp[i].message + "<br/>"
-                            }
-                        }
-                        document.getElementById("errorMessage").innerHTML = err;
-                    }
-
+                    document.getElementById("errorMessage").innerHTML = getErrors(msg);
                 })
-                .catch(function (err) {
+                .catch(function (err) {                    
                     return console.error(err.toString());
                 });
         });
+
+        function getErrors(msg){
+            var rsp = msg.commandResponses;
+            var err = '';
+            if (rsp && rsp.length > 0) {                
+                for (var i = 0; i < rsp.length; i++) {
+                    if (rsp[i].responseCode != 0) {
+                        err += rsp[i].message + "<br/>"
+                    }
+                }                
+            }
+            return err;
+        }
 
         function setUiState(movement) {
             var turnHeadLeft = $('.button-Q img');

@@ -12,7 +12,7 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.MqttClient;
 /// </summary>
 public class MqttClientService : IMqttClientService, IDisposable
 {
-    private MqttClientConnectionOptions options;
+    private readonly MqttClientConnectionOptions options;
     private readonly MqttFactory mqttFactory = new();
     private readonly ILogger<MqttClientService> logger;
     private readonly IMqttClient mqttClient;
@@ -125,7 +125,8 @@ public class MqttClientService : IMqttClientService, IDisposable
     private MqttClientOptions GetOptions()
     {
         var mqttClientOptions = new MqttClientOptionsBuilder()
-                .WithTcpServer(this.options.BrokerAddress, this.options.Port)
+                .WithTcpServer(this.options.BrokerAddress, this.options.Port)                
+                .WithClientId("webid")
                 .WithTimeout(TimeSpan.FromSeconds(10))
                 .Build();
 
@@ -136,5 +137,6 @@ public class MqttClientService : IMqttClientService, IDisposable
     {
         this.mqttClient.DisconnectAsync().Wait();
         this.mqttClient.Dispose();
+        GC.SuppressFinalize(this);
     }
 }

@@ -7,7 +7,8 @@ using ERNI.BerlinSpartans.Hackathon.Services.PiCarXClient.Model;
 
 namespace ERNI.BerlinSpartans.Hackathon.Services.Tests
 {
-    [Trait("Category", "Services - PiCarXClientService")]
+    [Trait("Category", "Services")]
+    [Trait("Category", "PiCarXClientService")]
     public class PiCarXClientServiceTests
     {
         [Fact]
@@ -187,7 +188,7 @@ namespace ERNI.BerlinSpartans.Hackathon.Services.Tests
         }
 
 
-        private IMqttClientService GetMqttClientServiceMock(
+        private static IMqttClientService GetMqttClientServiceMock(
             bool isConnected = true, 
             MqttClientPublishReasonCode reasonCode = MqttClientPublishReasonCode.Success)
         {

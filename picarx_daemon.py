@@ -6,31 +6,6 @@ import paho.mqtt.client as mqtt
 import json
 from threading import Lock
 
-from controller.pi_controller import PiController
-from controller.lane import Lane
-
-
-
-
-px = Picarx()
-px_lock = Lock()
-tts_robot = TTS()
-Vilib.camera_start(vflip=False,hflip=False)
-Vilib.display(local=False,web=True)
-
-
-speed = 20
-p = 20.0
-i = 0.5
-broker = "broker.hivemq.com"
-port = 1883
-
-myDirController = PiController(p, i, -40, 40)
-myLane = Lane(20, 160)
-
-
-
-
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
     print("Connected with result code "+str(rc))
@@ -66,7 +41,17 @@ def on_message(client, userdata, msg):
             else:
                 print('Unknown command')
 
+px = Picarx()
+px_lock = Lock()
+tts_robot = TTS()
+Vilib.camera_start(vflip=False,hflip=False)
+Vilib.display(local=False,web=True)
 
+client = mqtt.Client()
+client.on_connect = on_connect
+client.on_message = on_message
+
+client.connect("localhost", 1883, 60)
 
 def cmd_say( command):
     text = command['text']
@@ -105,72 +90,32 @@ def cmd_set_direction( cmd):
     if( -45 < angle & angle < 45):
         px.set_dir_servo_angle( angle)
 
-
-
 def cmd_start_lane_asssist( cmd):
-    print("starting lane assist")
-    invalid_count = 0
-
-    try:
-        px.forward(speed)
-
-        while invalid_count<30:
-            sensor_value_list = px.get_grayscale_data()
-        
-            if(myLane.isValid(sensor_value_list)):
-                linePos = myLane.getPos(sensor_value_list)
-                direction = myDirController.calc(linePos)
-                print("sensor: ", sensor_value_list, "; linepos: ", linePos, " dir: ", direction)
-                px.set_dir_servo_angle(direction)
-                invalid_count = 0
-            else:
-                print("sensor: ", sensor_value_list, " (invalid)")
-                invalid_count += 1 
-            time.sleep(0.05)
-
-    finally:
-        px.set_dir_servo_angle(0)
-        px.stop()
-        print("stop and exit")
-        time.sleep(0.1)  
+    print('Lane assist triggered')
 
 
 
 
-
-
-
-client = mqtt.Client()
-client.on_connect = on_connect
-client.on_message = on_message
+# Blocking call that processes network traffic, dispatches callbacks and
+# handles reconnecting.
+# Other loop*() functions are available that give a threaded interface and a
+# manual interface.
+client.loop_start()
 
 # separate mqtt client to send events and avoid threading issues
-#client2 = mqtt.Client()
+client2 = mqtt.Client()
+client2.connect("localhost", 1883, 60)
 
+while True:
+    with px_lock:
+        distance = round( px.ultrasonic.read(), 2)
+        grayscale = px.get_grayscale_data()
 
+    event = {
+        "distance" : distance,
+        "grayscale" : grayscale
+    }
 
+    client2.publish( "state", json.dumps( event))
 
-
-
-
-
-
-def main():
-    # Blocking call that processes network traffic, dispatches callbacks and
-    # handles reconnecting.
-    # Other loop*() functions are available that give a threaded interface and a
-    # manual interface.
-    client.connect(broker, port, 60)
-    client.loop_start()
-
-    #client2.connect(broker, port, 60)
-
-    while True:
-        time.sleep(1)      
-
-
-
-
-
-if __name__ == "__main__":
-    main()
+    time.sleep( 0.2)

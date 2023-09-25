@@ -1,0 +1,36 @@
+﻿.camera-feed {    
+    height: 500px;
+    min-width: 660px;
+    height: 500px;
+    background-color: #000000;
+    color: #FFFFFF;
+    vertical-align: middle;
+    border-radius: 15px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+    .camera-feed img {        
+        height: 480px;        
+        width: 640px;
+        vertical-align: middle;
+        border-radius: 15px;
+        display: inline-block;
+    }
+
+
+.col-md{
+    text-align:center;
+}
+
+.control-board {
+    border: 1px solid black;
+    margin-top: 5px;
+    background-color: rgb(198, 198, 198, 0.80);
+    border-radius: 15px;
+    min-width: 660px;
+}
+.control-board img {
+    cursor:pointer;
+}

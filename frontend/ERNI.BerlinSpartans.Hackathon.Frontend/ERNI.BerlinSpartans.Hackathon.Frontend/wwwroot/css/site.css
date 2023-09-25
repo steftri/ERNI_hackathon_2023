@@ -1,0 +1,45 @@
+html {
+  font-size: 14px;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+    margin-bottom: 60px;
+    height:100%;
+}
+
+html {
+    min-width: 860px!important;
+}
+
+.navbar-blue{
+    background-color: #073779;
+    color: white;
+}
+footer{
+    background-color:white;
+}
+
+.bg-spartans {
+    background-image: url(/images/spartans.png);
+    background-color: rgba(255, 255, 255, 0.728);
+    background-blend-mode: overlay;    
+}
+
+.help-table {
+    background-color: rgb(255, 255, 255, 0.80);
+}

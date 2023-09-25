@@ -1,0 +1,26 @@
+﻿@page
+@model IndexModel
+@{
+    ViewData["Title"] = "Home page";
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <h2>We are the <strong>Berlin Spartans</strong>.</h2>
+    <h3>We know no fear.</h3>
+    <br /><br />
+    <h3>If you don't believe us, you can take a look at our <a href="https://www.yammer.com/erni.ch/#/files/1819800461312" target="_blank">Video Presentation</a>.</h3>
+    <br /><br />
+    <h4>If you are oh-so-boring and all-business, you can just click the button below.</h4>
+
+    <a asp-page="/Remote" type="button" class="btn btn-lg btn-danger">Go to the Race! <strong>&gt;&gt;</strong></a>
+
+    <br /><br />
+
+    <h4>But, before you do that, we strongly suggest to consult our Help page.</h4>
+    
+    <a asp-page="/Help" type="button" class="btn btn-lg btn-success">Show me the instructions! <strong>&gt;&gt;</strong></a>
+    <br /><br /><br /><br />
+    <h3>You have been warned!</h3>
+    
+</div>

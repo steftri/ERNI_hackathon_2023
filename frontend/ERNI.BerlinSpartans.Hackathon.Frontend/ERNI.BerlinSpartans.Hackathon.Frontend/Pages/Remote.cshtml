@@ -1,0 +1,174 @@
+﻿@page
+@model RemoteModel
+
+@section Styles{
+    <link rel="stylesheet" href="~/css/remote.css" />
+}
+
+<div class="container-fluid w-50">
+    <div class="row">
+        <div class="col-md camera-feed">
+            <img id="feed" src="http://10.213.90.68:9000/mjpg" style="display:none" onload="feedLoaded()" onerror="noVideo()" />
+            <div id="img-loading" style="margin-top:25%">
+                Loading...
+            </div>            
+            <div style="display: none; margin-top:25%" id="no-video">
+                No video feed available. <br />
+                Ensure that the robot is activated and connected to the network.<br />
+                Reload the page to retry.
+            </div>
+        </div>
+    </div>
+    <div class="row control-board">
+        <div class="col-md">
+            <div class="row">
+                <div class="col-md button-Q">
+                    <img src="images/counter-clockwise.png" title="Press Q" />
+                </div>
+                <div class="col-md button-W">
+                    <img src="images/arrow-up.png" title="Press W" />
+                </div>
+                <div class="col-md button-E">
+                    <img src="images/clockwise.png" title="Press E" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md button-A">
+                    <img src="images/arrow-left.png" title="Press A" />
+                </div>
+                <div class="col-md button-S">
+                    <img src="images/arrow-down.png" title="Press S" />
+                </div>
+                <div class="col-md button-D">
+                    <img src="images/arrow-right.png" title="Press D" />
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-md button-A">
+                    <button class="btn btn-primary button-lane" title="Press Space">Start Lane Assist</button>
+                </div>                
+            </div>
+        </div>
+    </div>
+</div>
+<div id="errorMessage"></div>
+
+@section Scripts {
+    <script src="~/js/keyboardlistener.js"></script>
+    <script src="~/js/htmlelementlistener.js"></script>
+    <script src="~/lib/microsoft/signalr/dist/browser/signalr.js"></script>
+    <script>
+
+        function noVideo(){
+            var feed = document.getElementById("feed");
+            var noVideo= document.getElementById("no-video");
+            var imgLoading = document.getElementById("img-loading");
+            imgLoading.style.display = "none";
+            feed.style.display ="none";
+            noVideo.style.display = "block";
+        }
+
+        function feedLoaded() {
+            var feed = document.getElementById("feed");
+            var noVideo = document.getElementById("no-video");
+            var imgLoading = document.getElementById("img-loading");
+            imgLoading.style.display = "none";
+            feed.style.display = "block";
+            noVideo.style.display = "none";
+        }
+
+        var keyBoardListener = new KeyBoardListener();
+        var htmlElementListener = new HtmlElementListener("button");
+        var connection = new signalR.HubConnectionBuilder().withUrl("/robotcommandhub").build();
+
+        connection.start().catch(function (err) {
+            return console.error(err.toString());
+        });
+
+        $(keyBoardListener).bind('movementChanged', function (event, movement) {
+            self.setUiState(movement);            
+            connection.invoke("MovementChanged", movement)
+                .then(function (msg) {
+                    document.getElementById("errorMessage").innerHTML = getErrors(msg);
+                })
+                .catch(function (err) {                    
+                    return console.error(err.toString());
+                });
+        });
+
+        $(htmlElementListener).bind('movementChanged', function (event, movement) {
+            self.setUiState(movement);            
+            connection.invoke("MovementChanged", movement)
+                .then(function (msg) {
+                    document.getElementById("errorMessage").innerHTML = getErrors(msg);
+                })
+                .catch(function (err) {                    
+                    return console.error(err.toString());
+                });
+        });
+
+        function getErrors(msg){
+            var rsp = msg.commandResponses;
+            var err = '';
+            if (rsp && rsp.length > 0) {                
+                for (var i = 0; i < rsp.length; i++) {
+                    if (rsp[i].responseCode != 0) {
+                        err += rsp[i].message + "<br/>"
+                    }
+                }                
+            }
+            return err;
+        }
+
+        function setUiState(movement) {
+            var turnHeadLeft = $('.button-Q img');
+            var turnHeadRight = $('.button-E img');
+            var forward = $('.button-W img');
+            var backward = $('.button-S img');
+            var left = $('.button-A img');
+            var right = $('.button-D img');
+
+            if (movement.forward === true) {
+                $(forward).attr('src', 'images/arrow-up-pressed.png');
+            }
+            else {
+                $(forward).attr('src', 'images/arrow-up.png');
+            }
+
+            if (movement.backward === true) {
+                $(backward).attr('src', 'images/arrow-down-pressed.png');
+            }
+            else {
+                $(backward).attr('src', 'images/arrow-down.png');
+            }
+
+            if (movement.left === true) {
+                $(left).attr('src', 'images/arrow-left-pressed.png');
+            }
+            else {
+                $(left).attr('src', 'images/arrow-left.png');
+            }
+
+            if (movement.right === true) {
+                $(right).attr('src', 'images/arrow-right-pressed.png');
+            }
+            else {
+                $(right).attr('src', 'images/arrow-right.png');
+            }
+
+            if (movement.turnHeadLeft === true) {
+                $(turnHeadLeft).attr('src', 'images/counter-clockwise-pressed.png');
+            }
+            else {
+                $(turnHeadLeft).attr('src', 'images/counter-clockwise.png');
+            }
+
+            if (movement.turnHeadRight === true) {
+                $(turnHeadRight).attr('src', 'images/clockwise-pressed.png');
+            }
+            else {
+                $(turnHeadRight).attr('src', 'images/clockwise.png');
+            }
+        }
+    </script>
+}

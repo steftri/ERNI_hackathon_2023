@@ -4,8 +4,8 @@ class PiController(object):
         self.kp = kp
         self.ki = ki
         self.i = 0        
-        self.iMin = -100
-        self.iMax = -100
+        self.iMin = -10
+        self.iMax = 10
         self.ctrlMin = ctrlMin
         self.ctrlMax = ctrlMax
         self.setPoint = 0
@@ -25,7 +25,7 @@ class PiController(object):
         self.ctrlVal = 0
 
     def calc(self, processVar):
-        diff = self.setPoint - processVar
+        diff = processVar - self.setPoint
         self.i += diff
         self.ctrlVal = self.kp*diff +self.ki*self.i
         if self.ctrlVal<self.ctrlMin:
@@ -36,4 +36,3 @@ class PiController(object):
 
     def getCtrlVal(self):
         return self.ctrlVal
-    

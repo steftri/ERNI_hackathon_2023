@@ -1,3 +1,4 @@
+
 class Lane(object):
 
     def __init__(self, blackValue: int, whiteValue: int):
@@ -13,14 +14,15 @@ class Lane(object):
             calibratedValue=1.0     
         return calibratedValue 
 
-    def calcPos(self, middleValue, outerValue):
+    def calcPos(self, middleValue, outerValue, otherouterValue):
         if(middleValue<outerValue and middleValue<0.1): # the lane is outside the range
             if(outerValue<0.1):
                 return 0.0         # no lane is detectable at all
             return 1/outerValue;
         else:                      # the middle of the lane is in the range
-            return outerValue/(middleValue+outerValue);
-
+            if(middleValue+(outerValue-otherouterValue) == 0):
+              return 0.0 
+        return (outerValue-otherouterValue)/(middleValue+(outerValue-otherouterValue));
 
     def isValid(self, sensorValues):
         if(sensorValues[0] < self.blackValue
@@ -34,17 +36,17 @@ class Lane(object):
         else:
             return True
 
-
     def getPos(self, sensorValues):
         left = 1.0-self.calibrate(sensorValues[0])
         middle = 1.0-self.calibrate(sensorValues[1])
         right = 1.0-self.calibrate(sensorValues[2])
         if(left<=right):
-            pos = self.calcPos(middle, right)
+            pos = self.calcPos(middle, right, left)
         else:
-            pos = -self.calcPos(middle, left)
+            pos = -self.calcPos(middle, left, right)
         print("Val: ", left, "-", middle, "-", right, "-> ", pos)
         return pos
+
 
 
 

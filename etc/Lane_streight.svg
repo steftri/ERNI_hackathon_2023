@@ -28,13 +28,13 @@
      inkscape:deskcolor="#d1d1d1"
      inkscape:document-units="mm"
      inkscape:zoom="0.59471635"
-     inkscape:cx="353.10951"
-     inkscape:cy="565.81595"
-     inkscape:window-width="1920"
-     inkscape:window-height="1009"
-     inkscape:window-x="3832"
-     inkscape:window-y="-8"
-     inkscape:window-maximized="1"
+     inkscape:cx="352.26877"
+     inkscape:cy="564.97522"
+     inkscape:window-width="1346"
+     inkscape:window-height="1080"
+     inkscape:window-x="2397"
+     inkscape:window-y="92"
+     inkscape:window-maximized="0"
      inkscape:current-layer="layer1" />
   <defs
      id="defs1">
@@ -42,13 +42,21 @@
        id="linearGradient1"
        inkscape:collect="always">
       <stop
-         style="stop-color:#ffffff;stop-opacity:1;"
+         style="stop-color:#000000;stop-opacity:0;"
          offset="0"
          id="stop3" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0.19999999;"
+         offset="0.11014494"
+         id="stop4" />
       <stop
          style="stop-color:#000000;stop-opacity:1;"
          offset="0.49435028"
          id="stop1" />
+      <stop
+         style="stop-color:#000000;stop-opacity:0.2;"
+         offset="0.88115942"
+         id="stop5" />
       <stop
          style="stop-color:#000000;stop-opacity:0;"
          offset="1"
@@ -63,16 +71,16 @@
        x2="144.14435"
        y2="149.48302"
        gradientUnits="userSpaceOnUse"
-       gradientTransform="matrix(0.81736255,0,0,0.9963893,17.545446,-0.44328357)" />
+       gradientTransform="matrix(0.91272154,0,0,0.9963893,10.842415,-0.44328357)" />
   </defs>
   <g
      inkscape:label="Ebene 1"
      inkscape:groupmode="layer"
      id="layer1">
     <rect
-       style="fill:url(#linearGradient2);stroke-width:0.238772"
+       style="fill:url(#linearGradient2);stroke-width:0.252316"
        id="rect1"
-       width="60"
+       width="67"
        height="297"
        x="75"
        y="0" />

@@ -39,16 +39,20 @@ The system shall provide a lane assist.
 
 ### Frontend Software Requirements
 
-### FR02 Keyboard controls
+#### FR02 - Keyboard controls
 The user should be able to control the robot with WASD (driving/steering) and EQ (turning the head). 
 The keyboard controls should be responsive and not laggy.
 
-### FR03 On-screen keyboard
+#### FR03 - On-screen keyboard
 The user should be able to control the robot with an on-screen keyboard/gamepad.
 The on-scren keyboard should give feedback to the user if it's being pressed.
 
-### FR04 Video feed
+#### FR04 - Video feed
 The user should see the robot's video feed so they know where they are going.
+
+#### FR05 - Line Assist support
+The software shall provide the possibility to engage the lane assist on the robot.
+
 
 ### Firmware SW Requirements
 
@@ -89,8 +93,8 @@ The software shall be able to be tolerant against gaps in the track marking of u
 
 | System Requirements        | Traces to |
 |----------------------------|-----------|
-| SysR02 - Remote Control    | UiSW01 - Web application<br>UiSW02 - Manual control<br>SW01 - Environment<br>SW02 - Motion<br>SW03 - Steering<br>SW04 - Video<br>SW05 - RemoteControl   |
-| SysR03 - Lane Assist       | UiSW03 - Lane Assist support<br>SW07 - Minimum Turn radius<br>SW08 - Gaps in the track   |
+| SysR02 - Remote Control    | FR02 - Keyboard controls<br>FR03 - On-screen keyboard<br>FR04 - Video feed<br>SW01 - Environment<br>SW02 - Motion<br>SW03 - Steering<br>SW04 - Video<br>SW05 - RemoteControl   |
+| SysR03 - Lane Assist       | SW06 - Lane Assist<br>SW07 - Minimum Turn radius<br>SW08 - Gaps in the track   |
 
 
 ## Software Architecture

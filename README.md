@@ -59,6 +59,9 @@ The software shall provide the possibility to engage the lane assist on the robo
 #### FR06 - Configuration of parameters
 The software shall provide the possibility to configure the P and I factor of the robot's PI controller.
 
+#### FR07 - Configuration grayscale sensor
+The software shall provide the possibility to configure the grayscale values interpreted as black and white.
+
 
 
 ### Firmware SW Requirements
@@ -90,6 +93,8 @@ The software shall be able to be tolerant against gaps in the track marking of u
 #### SW09 - Configuration of parameters
 The software shall provide the posibility to configure the PI controller.
 
+#### SW10 - Configuration grayscale sensor
+The software shall provide the possibility to configure the grayscale values interpreted as black and white.
 
 
 ### Traceabilitiy and Test Coverage
@@ -106,11 +111,41 @@ The software shall provide the posibility to configure the PI controller.
 |----------------------------|-----------|
 | SysR02 - Remote Control    | FR02 - Keyboard controls<br>FR03 - On-screen keyboard<br>FR04 - Video feed<br>SW01 - Environment<br>SW02 - Motion<br>SW03 - Steering<br>SW04 - Video<br>SW05 - RemoteControl   |
 | SysR03 - Lane Assist       | SW06 - Lane Assist<br>SW07 - Minimum Turn radius<br>SW08 - Gaps in the track   |
-| SysR04 - Optimization      | FR06 - Configuration of parameters<br>SW09 - Configuration of parameters
+| SysR04 - Optimization      | FR06 - Configuration of parameters<br>FR07 - Configuration grayscale sensor<br>SW09 - Configuration of parameters<br>SW10 - Configuration grayscale sensor
+
+
+## Communication Interface
+
+The frontend and the firmware communicate via MQTT messages. The body of the messages are JSON-formatted. 
+
+### Topic "command"
+
+The JSON message is formatted as follows:
+
+```json
+{
+    "operation" : "<operation>",
+    "<parmeter>" : <value>
+}
+```
+
+The following operations are available:
+
+ * stop
+ * set_speed(speed)
+ * stop()
+ * set_direction(angle)
+ * set_head_rotate(angle)
+ * set_head_tilt(angle)
+ * say(text)
+ * start_lane_asssist()
+ * set_controller_p_param(p) 
+ * set_controller_i_param(p)
+ * set_grayscale_min(min)
+ * set_grayscale_max(max)
 
 
 ## Software Architecture
-
 
 The firmware is composed of different modules
  * The Lane Controller is responsible for calculating the position relatively to the track. Input data are the three grey values from the grey scale sensor. Output data is a value in float, while 0 means the car is exactly above the track, negative values means it is left of the track, positive values right.
@@ -161,7 +196,7 @@ Date: TBD
 
 #### Release-triggering changes
 
-* MQTT commands for configuration of PI controller added
+* MQTT commands for configuration of PI controller and grayscale sensor added
 
 
 ### Version 1.0
@@ -181,5 +216,5 @@ Youtube video: [The PiCar-X. A Raspberry Pi powered robot car. Supplied by SunFo
 
 ### Environment: 
 
-WLAN: Hackathon
+WLAN: Hackathon<br>
 MQTT: broker.hivemq.com

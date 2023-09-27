@@ -25,7 +25,7 @@ i = 0.5
 broker = "broker.hivemq.com"
 port = 1883
 
-myDirController = PiController(p, i, -40, 40)
+myDirController = PiController(p, i, -45, 45)
 myLane = Lane(20, 160)
 
 
@@ -59,6 +59,10 @@ def on_message(client, userdata, msg):
                 cmd_set_head_rotate( command)
             elif operation == 'set_head_tilt':
                 cmd_set_head_tilt( command)
+            elif operation == 'cmd_set_grayscale_config':
+                cmd_set_grayscale_config( command)
+            elif operation == 'cmd_set_controller_config':
+                cmd_set_controller_config( command)                
             elif operation == 'start_lane_assist':
                 cmd_start_lane_asssist( command)
             elif operation == 'say':
@@ -105,6 +109,20 @@ def cmd_set_direction( cmd):
     if( -45 < angle & angle < 45):
         px.set_dir_servo_angle( angle)
 
+
+def cmd_set_grayscale_config( cmd):
+    black = cmd['black']
+    white = cmd['white']
+
+    myLane.blackValue = black
+    myLane.whiteValue = white
+
+
+def cmd_set_controller_config( cmd):
+    p = cmd['p']
+    i = cmd['i']
+
+    myDirController.setParams(p, i)
 
 
 def cmd_start_lane_asssist( cmd):

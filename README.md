@@ -139,10 +139,8 @@ The following operations are available:
  * set_head_tilt(angle)
  * say(text)
  * start_lane_asssist()
- * set_controller_p_param(p) 
- * set_controller_i_param(p)
- * set_grayscale_min(min)
- * set_grayscale_max(max)
+ * set_grayscale_config(black, white) 
+ * set_controller_config(p, i)
 
 
 ## Software Architecture

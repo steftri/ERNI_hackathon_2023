@@ -37,6 +37,7 @@
         </script>
 
         <img src="http://10.213.90.68:9000/mjpg"></img>
+        <h2>Direct remote control</h2>
         <div class="slidecontainer">
             <label>Direction</label>
             <input type="range" min="-30" max="30" value="0" class="slider" id="angle0">
@@ -47,13 +48,32 @@
             <label>Tilt Head</label>
             <input type="range" min="-45" max="45" value="0" class="slider" id="angle3">
         </div>
-        <div class="la"><input id="labutton" type="button" value="Start Lane Assist"></div>
+        <h2>Configuration</h2>
+        <div class="slidecontainer">
+            <label>Greyscale sensor minimum value (black)</label>
+            <input type="range" min="0" max="255" value="20" class="slider" id="black">
+            <label>Greyscale sensor minimum value (white)</label>
+            <input type="range" min="0" max="255" value="180" class="slider" id="white">
+            <label>Proportional factor of controller</label>
+            <input type="range" min="0" max="200" value="50" class="slider" id="p">
+            <label>Integral factor of controller</label>
+            <input type="range" min="0" max="100" value="5" class="slider" id="i">
+        </div>        
+        <h2>Lane assist</h2>
+        <div class="la">
+            <input id="labutton" type="button" value="Start Lane Assist">
+        </div>
+        <h2>Extra</h2>
         <div class="tts"><input id="ttstext" type="text"><input id="ttsbutton" type="button" value="Say"></div>
         <script>
             let angle0 = document.getElementById('angle0');
             let angle1 = document.getElementById('angle1');
             let angle2 = document.getElementById('angle2');
             let angle3 = document.getElementById('angle3');
+            let black = document.getElementById('black');
+            let white = document.getElementById('white');
+            let p = document.getElementById('p');
+            let i = document.getElementById('i');
             let labutton = document.getElementById('labutton');
             let ttstext = document.getElementById('ttstext');
             let ttsbutton = document.getElementById('ttsbutton');
@@ -94,6 +114,26 @@
                 sendCommands( command);
             }
 
+            function onGrayscaleChanged() {
+                var command = [{ 
+                    "operation" : "set_grayscale_config", 
+                    "black" : Number( black.value),
+                    "white" : Number( white.ariaValueMin)
+                }];
+
+                sendCommands( command);
+            }
+
+            function onControllerConfigChanged() {
+                var command = [{ 
+                    "operation" : "set_controller_config", 
+                    "p" : Number( p.value/10.0),
+                    "i" : Number( i.value/10.0)
+                }];
+
+                sendCommands( command);
+            }            
+
             function onStartLaneAssist() {
                 var command = [{ 
                     "operation" : "start_lane_assist", 
@@ -125,8 +165,13 @@
             angle1.oninput = onSpeedChanged;
             angle2.oninput = onHeadRotate;
             angle3.oninput = onHeadTilt;
+            black.oninput = onGrayscaleChanged;
+            white.oninput = onGrayscaleChanged;
+            p.oninput = onControllerConfigChanged;
+            i.oninput = onControllerConfigChanged;
             labutton.onclick = onStartLaneAssist;
             ttsbutton.onclick = say;
          </script>
     </body>
 </html>
+

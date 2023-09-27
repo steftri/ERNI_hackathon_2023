@@ -152,6 +152,26 @@ The firmware is composed of different modules
 | Microsoft.Extensions.Logging             | 7.0.0     |
 
 
+
+## Changelog
+
+### Version 1.1
+
+Date: TBD
+
+#### Release-triggering changes
+
+* MQTT commands for configuration of PI controller added
+
+
+### Version 1.0
+
+Date: 2023-09-25
+
+Initial version
+
+
+
 ## Additional Information
 
 ### Getting started with the Raspberry PI

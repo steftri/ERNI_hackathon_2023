@@ -103,14 +103,14 @@ The software shall provide the possibility to configure the grayscale values int
 
 | Stakeholder Requiremet     | Traces to |
 |----------------------------|-----------|
-| StR01 - Solving a parcours | SysR02 - Remote Control<br>SysRS - Lane Assist<br>SysR04 - Optimization  |
+| StR01 - Solving a parcours | SysR02 - Remote Control<br>SysRS3 - Lane Assist<br>SysR04 - Optimization  |
 
 ### System Traceability
 
 | System Requirements        | Traces to |
 |----------------------------|-----------|
 | SysR02 - Remote Control    | FR02 - Keyboard controls<br>FR03 - On-screen keyboard<br>FR04 - Video feed<br>SW01 - Environment<br>SW02 - Motion<br>SW03 - Steering<br>SW04 - Video<br>SW05 - RemoteControl   |
-| SysR03 - Lane Assist       | SW06 - Lane Assist<br>SW07 - Minimum Turn radius<br>SW08 - Gaps in the track   |
+| SysR03 - Lane Assist       | FR05 - Line Assist support<br>SW06 - Lane Assist<br>SW07 - Minimum Turn radius<br>SW08 - Gaps in the track   |
 | SysR04 - Optimization      | FR06 - Configuration of parameters<br>FR07 - Configuration grayscale sensor<br>SW09 - Configuration of parameters<br>SW10 - Configuration grayscale sensor
 
 

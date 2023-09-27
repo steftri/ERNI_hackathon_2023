@@ -36,6 +36,9 @@ The system shall be able to control the movement of the robot remotely.
 #### SysR03 - Lane Assist
 The system shall provide a lane assist.
 
+#### SysR04 - Optimization
+The system shall provide the posibility to parametrize the software to improve the performance.
+
 
 ### Frontend Software Requirements
 
@@ -52,6 +55,10 @@ The user should see the robot's video feed so they know where they are going.
 
 #### FR05 - Line Assist support
 The software shall provide the possibility to engage the lane assist on the robot.
+
+#### FR06 - Configuration of parameters
+The software shall provide the possibility to configure the P and I factor of the robot's PI controller.
+
 
 
 ### Firmware SW Requirements
@@ -80,6 +87,10 @@ The software shall be able to follow a track with a radius of down to 30 cm.
 #### SW08 - Gaps in the track
 The software shall be able to be tolerant against gaps in the track marking of up to 25 cm.
 
+#### SW09 - Configuration of parameters
+The software shall provide the posibility to configure the PI controller.
+
+
 
 ### Traceabilitiy and Test Coverage
 
@@ -87,7 +98,7 @@ The software shall be able to be tolerant against gaps in the track marking of u
 
 | Stakeholder Requiremet     | Traces to |
 |----------------------------|-----------|
-| StR01 - Solving a parcours | SysR01 - Video<br>SysR02 - Remote Control |
+| StR01 - Solving a parcours | SysR02 - Remote Control<br>SysRS - Lane Assist<br>SysR04 - Optimization  |
 
 ### System Traceability
 
@@ -95,6 +106,7 @@ The software shall be able to be tolerant against gaps in the track marking of u
 |----------------------------|-----------|
 | SysR02 - Remote Control    | FR02 - Keyboard controls<br>FR03 - On-screen keyboard<br>FR04 - Video feed<br>SW01 - Environment<br>SW02 - Motion<br>SW03 - Steering<br>SW04 - Video<br>SW05 - RemoteControl   |
 | SysR03 - Lane Assist       | SW06 - Lane Assist<br>SW07 - Minimum Turn radius<br>SW08 - Gaps in the track   |
+| SysR04 - Optimization      | FR06 - Configuration of parameters<br>SW09 - Configuration of parameters
 
 
 ## Software Architecture
@@ -108,7 +120,6 @@ The firmware is composed of different modules
 ## Software Development
 
 ### Tools used for Firmware development
-
  * [Raspberry Pi imager](https://www.raspberrypi.com/software/), version 1.7.5
  * [EzBlock Studio online](http://ezblock.cc/ezblock-studio)
  * EzBlock App, AppStore, Version 3.2.140
@@ -141,7 +152,6 @@ The firmware is composed of different modules
 | Microsoft.Extensions.Logging             | 7.0.0     |
 
 
-
 ## Additional Information
 
 ### Getting started with the Raspberry PI
@@ -152,3 +162,4 @@ Youtube video: [The PiCar-X. A Raspberry Pi powered robot car. Supplied by SunFo
 ### Environment: 
 
 WLAN: Hackathon
+MQTT: broker.hivemq.com

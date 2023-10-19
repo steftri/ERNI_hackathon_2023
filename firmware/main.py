@@ -18,15 +18,16 @@ tts_robot = TTS()
 Vilib.camera_start(vflip=False,hflip=False)
 Vilib.display(local=False,web=True)
 
-
 speed = 20
 p = 20.0
 i = 0.5
 broker = "broker.hivemq.com"
 port = 1883
 
-myDirController = PiController(p, i, -45, 45)
-myLane = Lane(20, 160)
+
+myDirController = PiController(p, i, -40, 40)
+myDirController.setIntegralLimits(-100, 100)
+myLane = Lane(40, 160)
 
 
 
@@ -59,9 +60,9 @@ def on_message(client, userdata, msg):
                 cmd_set_head_rotate( command)
             elif operation == 'set_head_tilt':
                 cmd_set_head_tilt( command)
-            elif operation == 'cmd_set_grayscale_config':
+            elif operation == 'set_grayscale_config':
                 cmd_set_grayscale_config( command)
-            elif operation == 'cmd_set_controller_config':
+            elif operation == 'set_controller_config':
                 cmd_set_controller_config( command)                
             elif operation == 'start_lane_assist':
                 cmd_start_lane_asssist( command)
@@ -113,7 +114,7 @@ def cmd_set_direction( cmd):
 def cmd_set_grayscale_config( cmd):
     black = cmd['black']
     white = cmd['white']
-
+    print("grayscale black: ", black, "; white: ", white)
     myLane.blackValue = black
     myLane.whiteValue = white
 
@@ -121,13 +122,14 @@ def cmd_set_grayscale_config( cmd):
 def cmd_set_controller_config( cmd):
     p = cmd['p']
     i = cmd['i']
-
+    print("controller p: ", p, "; i: ", i)
     myDirController.setParams(p, i)
 
 
 def cmd_start_lane_asssist( cmd):
     print("starting lane assist")
     invalid_count = 0
+    last_tick = time.time()
 
     try:
         px.forward(speed)
@@ -143,8 +145,11 @@ def cmd_start_lane_asssist( cmd):
                 invalid_count = 0
             else:
                 print("sensor: ", sensor_value_list, " (invalid)")
-                invalid_count += 1 
-            time.sleep(0.05)
+                px.set_dir_servo_angle(0.0)
+                invalid_count += 1
+            print("Exec-Time: ", time.time()-last_tick)
+            last_tick =  time.time();
+            time.sleep(0.01)
 
     finally:
         px.set_dir_servo_angle(0)
@@ -184,9 +189,14 @@ def main():
     #client2.connect(broker, port, 60)
 
     while True:
-        time.sleep(1)      
-
-
+        print("Time: ", time.time());
+        sensor_value_list = px.get_grayscale_data()
+        if(myLane.isValid(sensor_value_list)):
+            linePos = myLane.getPos(sensor_value_list)        
+            print("sensor: ", sensor_value_list, "; linepos: ", linePos)
+        else:
+            print("sensor: ", sensor_value_list, " (invalid)")
+        time.sleep(5);      
 
 
 

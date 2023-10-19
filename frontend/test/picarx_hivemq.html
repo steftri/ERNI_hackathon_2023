@@ -51,13 +51,13 @@
         <h2>Configuration</h2>
         <div class="slidecontainer">
             <label>Greyscale sensor minimum value (black)</label>
-            <input type="range" min="0" max="255" value="20" class="slider" id="black">
+            <input type="range" min="0" max="255" value="40" class="slider" id="black">
             <label>Greyscale sensor minimum value (white)</label>
-            <input type="range" min="0" max="255" value="180" class="slider" id="white">
+            <input type="range" min="0" max="255" value="160" class="slider" id="white">
             <label>Proportional factor of controller</label>
-            <input type="range" min="0" max="200" value="50" class="slider" id="p">
+            <input type="range" min="0" max="100" value="20" class="slider" id="p">
             <label>Integral factor of controller</label>
-            <input type="range" min="0" max="100" value="5" class="slider" id="i">
+            <input type="range" min="0" max="200" value="50" class="slider" id="i">
         </div>        
         <h2>Lane assist</h2>
         <div class="la">
@@ -118,7 +118,7 @@
                 var command = [{ 
                     "operation" : "set_grayscale_config", 
                     "black" : Number( black.value),
-                    "white" : Number( white.ariaValueMin)
+                    "white" : Number( white.value)
                 }];
 
                 sendCommands( command);
@@ -127,8 +127,8 @@
             function onControllerConfigChanged() {
                 var command = [{ 
                     "operation" : "set_controller_config", 
-                    "p" : Number( p.value/10.0),
-                    "i" : Number( i.value/10.0)
+                    "p" : Number( p.value/1.0),
+                    "i" : Number( i.value/100.0)
                 }];
 
                 sendCommands( command);

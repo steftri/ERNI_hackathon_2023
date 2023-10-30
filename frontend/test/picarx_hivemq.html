@@ -50,14 +50,18 @@
         </div>
         <h2>Configuration</h2>
         <div class="slidecontainer">
+            <label>Maximum speed</label>
+            <input type="range" min="0" max="100" value="50" class="slider" id="maxspeed">
+            <label>Inner wheel speed</label>
+            <input type="range" min="0" max="100" value="100" class="slider" id="innerwheel">
             <label>Greyscale sensor minimum value (black)</label>
-            <input type="range" min="0" max="255" value="40" class="slider" id="black">
+            <input type="range" min="0" max="255" value="32" class="slider" id="black">
             <label>Greyscale sensor minimum value (white)</label>
-            <input type="range" min="0" max="255" value="160" class="slider" id="white">
+            <input type="range" min="0" max="255" value="223" class="slider" id="white">
             <label>Proportional factor of controller</label>
             <input type="range" min="0" max="100" value="20" class="slider" id="p">
             <label>Integral factor of controller</label>
-            <input type="range" min="0" max="200" value="50" class="slider" id="i">
+            <input type="range" min="0" max="200" value="20" class="slider" id="i">
         </div>        
         <h2>Lane assist</h2>
         <div class="la">
@@ -70,6 +74,8 @@
             let angle1 = document.getElementById('angle1');
             let angle2 = document.getElementById('angle2');
             let angle3 = document.getElementById('angle3');
+            let maxspeed = document.getElementById('maxspeed');
+            let innerwheel = document.getElementById('innerwheel');
             let black = document.getElementById('black');
             let white = document.getElementById('white');
             let p = document.getElementById('p');
@@ -113,6 +119,26 @@
 
                 sendCommands( command);
             }
+
+            function onMaxSpeedChanged() {
+                var command = [{ 
+                    "operation" : "set_max_speed", 
+                    "max_speed" : Number( maxspeed.value),
+                }];
+
+                sendCommands( command);
+            }
+
+            function onInnerWheelChanged() {
+                var command = [{ 
+                    "operation" : "set_inner_wheel", 
+                    "percentage" : Number( innerwheel.value),
+                }];
+
+                sendCommands( command);
+            }
+
+
 
             function onGrayscaleChanged() {
                 var command = [{ 
@@ -165,6 +191,8 @@
             angle1.oninput = onSpeedChanged;
             angle2.oninput = onHeadRotate;
             angle3.oninput = onHeadTilt;
+            maxspeed.oninput = onMaxSpeedChanged;
+            innerwheel.oninput = onInnerWheelChanged;
             black.oninput = onGrayscaleChanged;
             white.oninput = onGrayscaleChanged;
             p.oninput = onControllerConfigChanged;

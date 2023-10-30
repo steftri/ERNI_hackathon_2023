@@ -8,7 +8,7 @@ from threading import Lock
 
 from controller.pi_controller import PiController
 from controller.lane import Lane
-
+from controller.linearcalib import LinearCalib
 
 
 
@@ -18,18 +18,24 @@ tts_robot = TTS()
 Vilib.camera_start(vflip=False,hflip=False)
 Vilib.display(local=False,web=True)
 
-
-speed = 20
+la_max_speed = 50
 p = 20.0
-i = 0.5
+i = 0.2
 broker = "broker.hivemq.com"
 port = 1883
 
+
 myDirController = PiController(p, i, -40, 40)
-myLane = Lane(20, 160)
+myDirController.setIntegralLimits(-100, 100)
+myLane = Lane(32, 255-32)
 
+sensorCalibLeft = LinearCalib()
+sensorCalibMiddle = LinearCalib()
+sensorCalibRight = LinearCalib()
 
-
+sensorCalibLeft.setCalcParams(28, 175, 32, 255-48)
+sensorCalibMiddle.setCalcParams(36, 226, 32, 255-48)
+sensorCalibRight.setCalcParams(29, 176, 32, 255-48)
 
 # The callback for when the client receives a CONNACK response from the server.
 def on_connect(client, userdata, flags, rc):
@@ -59,6 +65,12 @@ def on_message(client, userdata, msg):
                 cmd_set_head_rotate( command)
             elif operation == 'set_head_tilt':
                 cmd_set_head_tilt( command)
+            elif operation == 'set_max_speed':
+                cmd_set_max_speed( command)
+            elif operation == 'set_grayscale_config':
+                cmd_set_grayscale_config( command)
+            elif operation == 'set_controller_config':
+                cmd_set_controller_config( command)                
             elif operation == 'start_lane_assist':
                 cmd_start_lane_asssist( command)
             elif operation == 'say':
@@ -106,27 +118,56 @@ def cmd_set_direction( cmd):
         px.set_dir_servo_angle( angle)
 
 
+def cmd_set_max_speed( cmd):
+    la_max_speed = cmd['max_speed']
+    print("max_speed: ", la_max_speed)
+
+
+
+def cmd_set_grayscale_config( cmd):
+    black = cmd['black']
+    white = cmd['white']
+    print("grayscale black: ", black, "; white: ", white)
+    myLane.blackValue = black
+    myLane.whiteValue = white
+
+
+def cmd_set_controller_config( cmd):
+    p = cmd['p']
+    i = cmd['i']
+    print("controller p: ", p, "; i: ", i)
+    myDirController.setParams(p, i)
+
 
 def cmd_start_lane_asssist( cmd):
     print("starting lane assist")
     invalid_count = 0
+    last_tick = time.time()
 
     try:
-        px.forward(speed)
+        px.forward(la_max_speed)
 
-        while invalid_count<30:
+        while invalid_count<40:
             sensor_value_list = px.get_grayscale_data()
+            sensor_value_list[0] = sensorCalibLeft.calc(sensor_value_list[0])
+            sensor_value_list[1] = sensorCalibMiddle.calc(sensor_value_list[1])
+            sensor_value_list[2] = sensorCalibRight.calc(sensor_value_list[2])
         
             if(myLane.isValid(sensor_value_list)):
                 linePos = myLane.getPos(sensor_value_list)
                 direction = myDirController.calc(linePos)
                 print("sensor: ", sensor_value_list, "; linepos: ", linePos, " dir: ", direction)
                 px.set_dir_servo_angle(direction)
+                px.forward(la_max_speed)  
                 invalid_count = 0
             else:
                 print("sensor: ", sensor_value_list, " (invalid)")
-                invalid_count += 1 
-            time.sleep(0.05)
+                px.set_dir_servo_angle(0.0)
+                px.forward(la_max_speed)
+                invalid_count += 1
+            print("Exec-Time: ", time.time()-last_tick)
+            last_tick =  time.time();
+            time.sleep(0.005)
 
     finally:
         px.set_dir_servo_angle(0)
@@ -166,10 +207,18 @@ def main():
     #client2.connect(broker, port, 60)
 
     while True:
-        time.sleep(1)      
+        sensor_value_list = px.get_grayscale_data()
+        print("Time: ", time.time(), "; raw sensor: ", sensor_value_list)
 
-
-
+        sensor_value_list[0] = sensorCalibLeft.calc(sensor_value_list[0])
+        sensor_value_list[1] = sensorCalibMiddle.calc(sensor_value_list[1])
+        sensor_value_list[2] = sensorCalibRight.calc(sensor_value_list[2])
+        if(myLane.isValid(sensor_value_list)):
+            linePos = myLane.getPos(sensor_value_list)        
+            print("Calibrated sensor: ", sensor_value_list, "; linepos: ", linePos)
+        else:
+            print("Calibrated sensor: ", sensor_value_list, " (invalid)")
+        time.sleep(3);
 
 
 if __name__ == "__main__":

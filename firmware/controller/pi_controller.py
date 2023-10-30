@@ -27,6 +27,11 @@ class PiController(object):
     def calc(self, processVar):
         diff = processVar - self.setPoint
         self.i += diff
+        if(self.i<self.iMin):
+           self.i=self.iMin
+        elif(self.i>self.iMax):
+           self.i=self.iMax
+        print("i: ", self.i)
         self.ctrlVal = self.kp*diff +self.ki*self.i
         if self.ctrlVal<self.ctrlMin:
             self.ctrlVal=self.ctrlMin

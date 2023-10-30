@@ -36,19 +36,33 @@ The system shall be able to control the movement of the robot remotely.
 #### SysR03 - Lane Assist
 The system shall provide a lane assist.
 
+#### SysR04 - Optimization
+The system shall provide the posibility to parametrize the software to improve the performance.
+
 
 ### Frontend Software Requirements
 
-### FR02 Keyboard controls
+#### FR02 - Keyboard controls
 The user should be able to control the robot with WASD (driving/steering) and EQ (turning the head). 
 The keyboard controls should be responsive and not laggy.
 
-### FR03 On-screen keyboard
+#### FR03 - On-screen keyboard
 The user should be able to control the robot with an on-screen keyboard/gamepad.
 The on-scren keyboard should give feedback to the user if it's being pressed.
 
-### FR04 Video feed
+#### FR04 - Video feed
 The user should see the robot's video feed so they know where they are going.
+
+#### FR05 - Line Assist support
+The software shall provide the possibility to engage the lane assist on the robot.
+
+#### FR06 - Configuration of parameters
+The software shall provide the possibility to configure the P and I factor of the robot's PI controller.
+
+#### FR07 - Configuration grayscale sensor
+The software shall provide the possibility to configure the grayscale values interpreted as black and white.
+
+
 
 ### Firmware SW Requirements
 
@@ -76,6 +90,12 @@ The software shall be able to follow a track with a radius of down to 30 cm.
 #### SW08 - Gaps in the track
 The software shall be able to be tolerant against gaps in the track marking of up to 25 cm.
 
+#### SW09 - Configuration of parameters
+The software shall provide the posibility to configure the PI controller.
+
+#### SW10 - Configuration grayscale sensor
+The software shall provide the possibility to configure the grayscale values interpreted as black and white.
+
 
 ### Traceabilitiy and Test Coverage
 
@@ -83,18 +103,47 @@ The software shall be able to be tolerant against gaps in the track marking of u
 
 | Stakeholder Requiremet     | Traces to |
 |----------------------------|-----------|
-| StR01 - Solving a parcours | SysR01 - Video<br>SysR02 - Remote Control |
+| StR01 - Solving a parcours | SysR02 - Remote Control<br>SysRS3 - Lane Assist<br>SysR04 - Optimization  |
 
 ### System Traceability
 
 | System Requirements        | Traces to |
 |----------------------------|-----------|
-| SysR02 - Remote Control    | UiSW01 - Web application<br>UiSW02 - Manual control<br>SW01 - Environment<br>SW02 - Motion<br>SW03 - Steering<br>SW04 - Video<br>SW05 - RemoteControl   |
-| SysR03 - Lane Assist       | UiSW03 - Lane Assist support<br>SW07 - Minimum Turn radius<br>SW08 - Gaps in the track   |
+| SysR02 - Remote Control    | FR02 - Keyboard controls<br>FR03 - On-screen keyboard<br>FR04 - Video feed<br>SW01 - Environment<br>SW02 - Motion<br>SW03 - Steering<br>SW04 - Video<br>SW05 - RemoteControl   |
+| SysR03 - Lane Assist       | FR05 - Line Assist support<br>SW06 - Lane Assist<br>SW07 - Minimum Turn radius<br>SW08 - Gaps in the track   |
+| SysR04 - Optimization      | FR06 - Configuration of parameters<br>FR07 - Configuration grayscale sensor<br>SW09 - Configuration of parameters<br>SW10 - Configuration grayscale sensor
+
+
+## Communication Interface
+
+The frontend and the firmware communicate via MQTT messages. The body of the messages are JSON-formatted. 
+
+### Topic "command"
+
+The JSON message is formatted as follows:
+
+```json
+{
+    "operation" : "<operation>",
+    "<parmeter>" : <value>
+}
+```
+
+The following operations are available:
+
+ * stop
+ * set_speed(speed)
+ * stop()
+ * set_direction(angle)
+ * set_head_rotate(angle)
+ * set_head_tilt(angle)
+ * say(text)
+ * start_lane_asssist()
+ * set_grayscale_config(black, white) 
+ * set_controller_config(p, i)
 
 
 ## Software Architecture
-
 
 The firmware is composed of different modules
  * The Lane Controller is responsible for calculating the position relatively to the track. Input data are the three grey values from the grey scale sensor. Output data is a value in float, while 0 means the car is exactly above the track, negative values means it is left of the track, positive values right.
@@ -104,7 +153,6 @@ The firmware is composed of different modules
 ## Software Development
 
 ### Tools used for Firmware development
-
  * [Raspberry Pi imager](https://www.raspberrypi.com/software/), version 1.7.5
  * [EzBlock Studio online](http://ezblock.cc/ezblock-studio)
  * EzBlock App, AppStore, Version 3.2.140
@@ -138,6 +186,25 @@ The firmware is composed of different modules
 
 
 
+## Changelog
+
+### Version 1.1
+
+Date: TBD
+
+#### Release-triggering changes
+
+* MQTT commands for configuration of PI controller and grayscale sensor added
+
+
+### Version 1.0
+
+Date: 2023-09-25
+
+Initial version
+
+
+
 ## Additional Information
 
 ### Getting started with the Raspberry PI
@@ -147,4 +214,5 @@ Youtube video: [The PiCar-X. A Raspberry Pi powered robot car. Supplied by SunFo
 
 ### Environment: 
 
-WLAN: Hackathon
+WLAN: Hackathon<br>
+MQTT: broker.hivemq.com

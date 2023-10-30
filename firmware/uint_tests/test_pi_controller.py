@@ -10,12 +10,12 @@ class Test_PiController(unittest.TestCase):
     def test_controller_direction(self):
         myPiController = PiController(1.0, 0.0, -45, 45)
         myPiController.calc(1)
-        self.assertTrue(myPiController.getCtrlVal() < 0)
+        self.assertTrue(myPiController.getCtrlVal() > 0)
 
     def test_controller_proportional_only(self):
         myPiController = PiController(1.0, 0.0, -45, 45)
         myPiController.calc(1)
-        self.assertTrue(myPiController.getCtrlVal() < 0)
+        self.assertTrue(myPiController.getCtrlVal() > 0)
         myPiController.calc(0)
         self.assertTrue(myPiController.getCtrlVal() == 0)
 
@@ -23,9 +23,9 @@ class Test_PiController(unittest.TestCase):
         myPiController = PiController(1.0, 0.0, -45, 45)
         myPiController.setParams(1, 1)
         myPiController.calc(1)
-        self.assertTrue(myPiController.getCtrlVal() < 0)
+        self.assertTrue(myPiController.getCtrlVal() > 0)
         myPiController.calc(0)
-        self.assertTrue(myPiController.getCtrlVal() < 0)
+        self.assertTrue(myPiController.getCtrlVal() > 0)
 
 
 

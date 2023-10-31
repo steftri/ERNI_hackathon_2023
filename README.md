@@ -96,6 +96,9 @@ The software shall provide the posibility to configure the PI controller.
 #### SW10 - Configuration grayscale sensor
 The software shall provide the possibility to configure the grayscale values interpreted as black and white.
 
+#### SW11 - Calibration grayscale sensor
+The software shall provide the possibility to calibrate the grayscale values.
+
 
 ### Traceabilitiy and Test Coverage
 
@@ -111,7 +114,7 @@ The software shall provide the possibility to configure the grayscale values int
 |----------------------------|-----------|
 | SysR02 - Remote Control    | FR02 - Keyboard controls<br>FR03 - On-screen keyboard<br>FR04 - Video feed<br>SW01 - Environment<br>SW02 - Motion<br>SW03 - Steering<br>SW04 - Video<br>SW05 - RemoteControl   |
 | SysR03 - Lane Assist       | FR05 - Line Assist support<br>SW06 - Lane Assist<br>SW07 - Minimum Turn radius<br>SW08 - Gaps in the track   |
-| SysR04 - Optimization      | FR06 - Configuration of parameters<br>FR07 - Configuration grayscale sensor<br>SW09 - Configuration of parameters<br>SW10 - Configuration grayscale sensor
+| SysR04 - Optimization      | FR06 - Configuration of parameters<br>FR07 - Configuration grayscale sensor<br>SW09 - Configuration of parameters<br>SW10 - Configuration grayscale sensor<br>SW11 - Calibration grayscale sensor
 
 
 ## Communication Interface
@@ -147,7 +150,8 @@ The following operations are available:
 
 The firmware is composed of different modules
  * The Lane Controller is responsible for calculating the position relatively to the track. Input data are the three grey values from the grey scale sensor. Output data is a value in float, while 0 means the car is exactly above the track, negative values means it is left of the track, positive values right.
- * the PiControlle is responsible for calculating a direction command as the result of the calculated position above the track. 
+ * the PiControlle is responsible for calculating a direction command as the result of the calculated position above the track.
+ * the LinearCalib module is responsible for calibrate sensor values to a given output range.
 
 
 ## Software Development
@@ -161,7 +165,7 @@ The firmware is composed of different modules
  * VSCode extension Python, Version v2023.6.1
 
 ### Firmware SOUP 
- * Raspberry Pi OS Lite (32-bit) with git, python3-pip, python3-setuptools, python3-smbus and 
+ * Raspberry Pi OS Lite (32-bit) with git, python3-pip, python3-setuptools and python3-smbus 
  * Robot-Hat v2.0
  * vilib v0.0.6
  * PiCar-X v2.0
@@ -190,12 +194,17 @@ The firmware is composed of different modules
 
 ### Version 1.1
 
-Date: TBD
+Date: 2023-10-31
 
 #### Release-triggering changes
+* Increase of motor speed to 50
 
+#### Secondary changes
 * MQTT commands for configuration of PI controller and grayscale sensor added
-
+* Calibration of grayscale sensor added
+* Limits for integral part of PI Controller implemented
+* PI controller parameters adjusted
+  
 
 ### Version 1.0
 
